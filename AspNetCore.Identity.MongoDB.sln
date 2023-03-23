@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".items", ".items", "{24143346-BEA0-4E8E-9249-17FF05C9772F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EDEC7D8F-4C6F-4DE3-8022-17A2A23AB18B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{24F9EFE8-010B-48D9-B5D2-EF194BDEAC31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9BE8804F-BCC0-48CF-9AEC-ED97414B0C78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Identity.MongoDB", "src\AspNetCore.Identity.MongoDB\AspNetCore.Identity.MongoDB.csproj", "{E5EC2474-B380-46DE-9BCB-75EAE945DC1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApp", "samples\SampleWebApp\SampleWebApp.csproj", "{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Identity.MongoDB.UnitTests", "tests\AspNetCore.Identity.MongoDB.UnitTests\AspNetCore.Identity.MongoDB.UnitTests.csproj", "{BF2F25DB-6F0D-4E6F-BF91-45474071C754}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5EC2474-B380-46DE-9BCB-75EAE945DC1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5EC2474-B380-46DE-9BCB-75EAE945DC1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5EC2474-B380-46DE-9BCB-75EAE945DC1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5EC2474-B380-46DE-9BCB-75EAE945DC1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF2F25DB-6F0D-4E6F-BF91-45474071C754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF2F25DB-6F0D-4E6F-BF91-45474071C754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF2F25DB-6F0D-4E6F-BF91-45474071C754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF2F25DB-6F0D-4E6F-BF91-45474071C754}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5EC2474-B380-46DE-9BCB-75EAE945DC1D} = {EDEC7D8F-4C6F-4DE3-8022-17A2A23AB18B}
+		{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB} = {24F9EFE8-010B-48D9-B5D2-EF194BDEAC31}
+		{BF2F25DB-6F0D-4E6F-BF91-45474071C754} = {9BE8804F-BCC0-48CF-9AEC-ED97414B0C78}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A52A2019-EEE6-4DAB-B111-C10693C9E03B}
+	EndGlobalSection
+EndGlobal
