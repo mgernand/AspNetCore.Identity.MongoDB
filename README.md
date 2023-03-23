@@ -1,2 +1,3 @@
 # AspNetCore.Identity.MongoDB
-A MongoDB UserStore and RoleStore adapter for ASP.NET Identity Core.
+
+A libary that provides MongoDB UserStore and RoleStore implementations for ASP.NET Identity Core.
