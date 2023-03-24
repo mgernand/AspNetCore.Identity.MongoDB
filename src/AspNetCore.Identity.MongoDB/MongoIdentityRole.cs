@@ -58,12 +58,12 @@
 		/// </summary>
 		public IList<MongoClaim> Claims { get; set; }
 
-        /// <summary>
-		///		Adds a claim to a the role.
-        /// </summary>
-        /// <param name="claim">The claim to add.</param>
-        /// <returns>Returns <c>true</c> if the claim was successfully added.</returns>
-        public bool AddClaim(Claim claim)
+		/// <summary>
+		///     Adds a claim to a the role.
+		/// </summary>
+		/// <param name="claim">The claim to add.</param>
+		/// <returns>Returns <c>true</c> if the claim was successfully added.</returns>
+		public bool AddClaim(Claim claim)
 		{
 			ArgumentNullException.ThrowIfNull(claim);
 
@@ -72,21 +72,21 @@
 			if(hasClaim)
 			{
 				return false;
-            }
+			}
 
 			MongoClaim mongoClaim = new MongoClaim();
 			mongoClaim.InitializeFromClaim(claim);
 			this.Claims.Add(mongoClaim);
 
 			return true;
-        }
+		}
 
 		/// <summary>
-		///		Removes a <see cref="Claim"/> from the role.
+		///     Removes a <see cref="Claim" /> from the role.
 		/// </summary>
 		/// <param name="claim">The claim to remove.</param>
 		/// <returns>Returns <c>true</c> if the claim was successfully removed.</returns>
-        public bool RemoveClaim(Claim claim)
+		public bool RemoveClaim(Claim claim)
 		{
 			ArgumentNullException.ThrowIfNull(claim);
 
@@ -98,6 +98,6 @@
 
 			this.Claims.Remove(mongoClaim);
 			return true;
-        }
-    }
+		}
+	}
 }

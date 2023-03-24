@@ -105,17 +105,20 @@
 		/// <param name="loginProvider"></param>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		public IdentityUserToken<TKey> GetToken(string loginProvider, string name)
+		public MongoIdentityUserToken<TKey> GetToken(string loginProvider, string name)
 		{
 			MongoUserToken token = this.Tokens.FirstOrDefault(x => x.LoginProvider == loginProvider && x.Name == name);
 			if(token != null)
 			{
-				return new IdentityUserToken<TKey>
-				{
+				return new MongoIdentityUserToken<TKey>()
+                {
 					UserId = this.Id,
 					LoginProvider = token.LoginProvider,
 					Name = token.Name,
-					Value = token.Value
+					Value = token.Value,
+
+					User = this,
+					Token = token
 				};
 			}
 
