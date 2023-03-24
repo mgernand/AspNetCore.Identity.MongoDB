@@ -8,6 +8,9 @@
 	using global::MongoDB.Bson.Serialization.Serializers;
 	using JetBrains.Annotations;
 
+	/// <summary>
+	///		A convention for setting the ID generator.
+	/// </summary>
 	[PublicAPI]
 	public sealed class IdGeneratorConvention : ConventionBase, IPostProcessingConvention
 	{

@@ -28,11 +28,11 @@
 		}
 	}
 
-    /// <summary>
-    ///     Provides an API for a persistence store for roles.
-    /// </summary>
-    /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-    [PublicAPI]
+	/// <summary>
+	///     Provides an API for a persistence store for roles.
+	/// </summary>
+	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
+	[PublicAPI]
 	public class RoleStore<TRole> : RoleStore<TRole, MongoDbContext>
 		where TRole : MongoIdentityRole<string>
 	{
@@ -183,37 +183,29 @@
 		}
 
 		/// <inheritdoc />
-		public override async Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
+		public override Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(role);
 			ArgumentNullException.ThrowIfNull(claim);
 
-			if(role.AddClaim(claim))
-			{
-				Expression<Func<TRole, bool>> predicate = x => x.Id.Equals(role.Id);
-				UpdateDefinition<TRole> updateDefinition = Builders<TRole>.Update.Set(x => x.Claims, role.Claims);
+			role.AddClaim(claim);
 
-				await this.RolesCollection.UpdateOneAsync(predicate, updateDefinition, cancellationToken: cancellationToken);
-			}
+			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc />
-		public override async Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
+		public override Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(role);
 			ArgumentNullException.ThrowIfNull(claim);
 
-			if(role.RemoveClaim(claim))
-			{
-				Expression<Func<TRole, bool>> predicate = x => x.Id.Equals(role.Id);
-				UpdateDefinition<TRole> updateDefinition = Builders<TRole>.Update.Set(x => x.Claims, role.Claims);
+			role.RemoveClaim(claim);
 
-				await this.RolesCollection.UpdateOneAsync(predicate, updateDefinition, cancellationToken: cancellationToken);
-			}
+			return Task.CompletedTask;
 		}
 	}
 }

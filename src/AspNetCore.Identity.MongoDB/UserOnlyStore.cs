@@ -18,34 +18,34 @@
 	public class UserOnlyStore : UserOnlyStore<MongoIdentityUser<string>>
 	{
 		/// <summary>
-		///		Initializes a new instance of the <see cref="UserOnlyStore{TUser}"/> type.
+		///     Initializes a new instance of the <see cref="UserOnlyStore{TUser}" /> type.
 		/// </summary>
-		/// <param name="context">The <see cref="MongoDbContext"/>.</param>
-		/// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
+		/// <param name="context">The <see cref="MongoDbContext" />.</param>
+		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
 		public UserOnlyStore(MongoDbContext context, IdentityErrorDescriber describer = null)
 			: base(context, describer)
 		{
 		}
 	}
 
-    /// <summary>
-    ///     Provides an API for a persistence store for users without roles.
-    /// </summary>
-    /// <typeparam name="TUser">The type of the class representing a user.</typeparam>
-    [PublicAPI]
-    public class UserOnlyStore<TUser> : UserOnlyStore<TUser, MongoDbContext>
+	/// <summary>
+	///     Provides an API for a persistence store for users without roles.
+	/// </summary>
+	/// <typeparam name="TUser">The type of the class representing a user.</typeparam>
+	[PublicAPI]
+	public class UserOnlyStore<TUser> : UserOnlyStore<TUser, MongoDbContext>
 		where TUser : MongoIdentityUser<string>
-    {
-        /// <summary>
-        ///		Initializes a new instance of the <see cref="UserOnlyStore{TUser}"/> type.
-        /// </summary>
-        /// <param name="context">The <see cref="MongoDbContext"/>.</param>
-        /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public UserOnlyStore(MongoDbContext context, IdentityErrorDescriber describer = null)
+	{
+		/// <summary>
+		///     Initializes a new instance of the <see cref="UserOnlyStore{TUser}" /> type.
+		/// </summary>
+		/// <param name="context">The <see cref="MongoDbContext" />.</param>
+		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
+		public UserOnlyStore(MongoDbContext context, IdentityErrorDescriber describer = null)
 			: base(context, describer)
 		{
 		}
-    }
+	}
 
 	/// <summary>
 	///     Provides an API for a persistence store for users without roles.
@@ -53,41 +53,41 @@
 	/// <typeparam name="TUser">The type of the class representing a user.</typeparam>
 	/// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
 	[PublicAPI]
-    public class UserOnlyStore<TUser, TContext> : UserOnlyStore<TUser, TContext, string>
+	public class UserOnlyStore<TUser, TContext> : UserOnlyStore<TUser, TContext, string>
 		where TUser : MongoIdentityUser<string>
 		where TContext : MongoDbContext
-    {
-        /// <summary>
-        ///		Initializes a new instance of the <see cref="UserOnlyStore{TUser, TContext}"/> type.
-        /// </summary>
-        /// <param name="context">The <see cref="MongoDbContext"/>.</param>
-        /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public UserOnlyStore(TContext context, IdentityErrorDescriber describer = null)
+	{
+		/// <summary>
+		///     Initializes a new instance of the <see cref="UserOnlyStore{TUser, TContext}" /> type.
+		/// </summary>
+		/// <param name="context">The <see cref="MongoDbContext" />.</param>
+		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
+		public UserOnlyStore(TContext context, IdentityErrorDescriber describer = null)
 			: base(context, describer)
 		{
 		}
-    }
+	}
 
-    /// <summary>
-    ///     Provides an API for a persistence store for users without roles.
-    /// </summary>
-    /// <typeparam name="TUser">The type of the class representing a user.</typeparam>
-    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
-    /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
-    [PublicAPI]
-    public class UserOnlyStore<TUser, TContext, TKey> : UserStoreBase<TUser, TKey, IdentityUserClaim<TKey>, IdentityUserLogin<TKey>, IdentityUserToken<TKey>>
+	/// <summary>
+	///     Provides an API for a persistence store for users without roles.
+	/// </summary>
+	/// <typeparam name="TUser">The type of the class representing a user.</typeparam>
+	/// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
+	/// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
+	[PublicAPI]
+	public class UserOnlyStore<TUser, TContext, TKey> : UserStoreBase<TUser, TKey, IdentityUserClaim<TKey>, IdentityUserLogin<TKey>, MongoIdentityUserToken<TKey>>
 		where TUser : MongoIdentityUser<TKey>
 		where TContext : MongoDbContext
 		where TKey : IEquatable<TKey>
-    {
+	{
 		private readonly TContext context;
 
 		/// <summary>
-        ///		Initializes a new instance of the <see cref="UserOnlyStore{TUser, TContext, TKey}"/> type.
-        /// </summary>
-        /// <param name="context">The <see cref="MongoDbContext"/>.</param>
-        /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public UserOnlyStore(TContext context, IdentityErrorDescriber describer)
+		///     Initializes a new instance of the <see cref="UserOnlyStore{TUser, TContext, TKey}" /> type.
+		/// </summary>
+		/// <param name="context">The <see cref="MongoDbContext" />.</param>
+		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
+		public UserOnlyStore(TContext context, IdentityErrorDescriber describer)
 			: base(describer ?? new IdentityErrorDescriber())
 		{
 			ArgumentNullException.ThrowIfNull(context);
@@ -99,7 +99,7 @@
 		public override IQueryable<TUser> Users => this.UsersCollection.AsQueryable();
 
 		/// <summary>
-		///		The collection of users in the database.
+		///     The collection of users in the database.
 		/// </summary>
 		public virtual IMongoCollection<TUser> UsersCollection => this.context.GetCollection<TUser>();
 
@@ -114,7 +114,7 @@
 			await this.UsersCollection.InsertOneAsync(user, new InsertOneOptions(), cancellationToken);
 
 			return IdentityResult.Success;
-        }
+		}
 
 		/// <inheritdoc />
 		public override async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default)
@@ -132,7 +132,7 @@
 			return result.ModifiedCount == 0
 				? IdentityResult.Failed(this.ErrorDescriber.ConcurrencyFailure())
 				: IdentityResult.Success;
-        }
+		}
 
 		/// <inheritdoc />
 		public override async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default)
@@ -150,7 +150,7 @@
 			return result.DeletedCount == 0
 				? IdentityResult.Failed(this.ErrorDescriber.ConcurrencyFailure())
 				: IdentityResult.Success;
-        }
+		}
 
 		/// <inheritdoc />
 		public override async Task<TUser> FindByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -162,8 +162,8 @@
 			return await this.UsersCollection.Find(x => x.Id.Equals(userId)).FirstOrDefaultAsync(cancellationToken);
 		}
 
-        /// <inheritdoc />
-        public override async Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
+		/// <inheritdoc />
+		public override async Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
@@ -171,8 +171,8 @@
 			return await this.UsersCollection.Find(x => x.NormalizedUserName == normalizedUserName).FirstOrDefaultAsync(cancellationToken);
 		}
 
-        /// <inheritdoc />
-        protected override async Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken)
+		/// <inheritdoc />
+		protected override async Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
@@ -194,7 +194,7 @@
 			Expression<Func<TUser, bool>> predicate = x => x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
 			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
 			return user?.GetUserLogin(loginProvider, providerKey);
-        }
+		}
 
 		/// <inheritdoc />
 		public override Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default)
@@ -205,28 +205,26 @@
 
 			IList<Claim> claims = user.Claims.Select(x => x.ToClaim()).ToList();
 			return Task.FromResult(claims);
-        }
+		}
 
 		/// <inheritdoc />
-		public override async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
+		public override Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(user);
 			ArgumentNullException.ThrowIfNull(claims);
 
-			bool addedClaims = claims.Aggregate(false, (current, claim) => current | user.AddClaim(claim));
-			if(addedClaims)
+			foreach(Claim claim in claims)
 			{
-				Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(user.Id);
-				UpdateDefinition<TUser> updateDefinition = Builders<TUser>.Update.Set(x => x.Claims, user.Claims);
+				user.AddClaim(claim);
+			}
 
-				await this.UsersCollection.UpdateOneAsync(predicate, updateDefinition, cancellationToken: cancellationToken);
-            }
+			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc />
-		public override async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default)
+		public override Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
@@ -234,52 +232,42 @@
 			ArgumentNullException.ThrowIfNull(claim);
 			ArgumentNullException.ThrowIfNull(newClaim);
 
-			if(user.ReplaceClaim(claim, newClaim))
-			{
-				Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(user.Id);
-				UpdateDefinition<TUser> updateDefinition = Builders<TUser>.Update.Set(x => x.Claims, user.Claims);
+			user.ReplaceClaim(claim, newClaim);
 
-				await this.UsersCollection.UpdateOneAsync(predicate, updateDefinition, cancellationToken: cancellationToken);
-            }
-        }
+			return Task.CompletedTask;
+		}
 
 		/// <inheritdoc />
-		public override async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
+		public override Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(user);
 			ArgumentNullException.ThrowIfNull(claims);
 
-			bool removedClaims = claims.Aggregate(false, (current, claim) => current | user.RemoveClaim(claim));
-            if (removedClaims)
+			foreach(Claim claim in claims)
 			{
-				Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(user.Id);
-				UpdateDefinition<TUser> updateDefinition = Builders<TUser>.Update.Set(x => x.Claims, user.Claims);
+				user.RemoveClaim(claim);
+			}
 
-				await this.UsersCollection.UpdateOneAsync(predicate, updateDefinition, cancellationToken: cancellationToken);
-            }
-        }
+			return Task.CompletedTask;
+		}
 
 		/// <inheritdoc />
-		public override async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default)
+		public override Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(user);
 			ArgumentNullException.ThrowIfNull(login);
 
-			if(user.AddLogin(login))
-			{
-				Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(user.Id);
-				UpdateDefinition<TUser> updateDefinition = Builders<TUser>.Update.Set(x => x.Logins, user.Logins);
+			user.AddLogin(login);
 
-				await this.UsersCollection.UpdateOneAsync(predicate, updateDefinition, cancellationToken: cancellationToken);
-            }
-        }
+			return Task.CompletedTask;
+		}
 
 		/// <inheritdoc />
-		public override async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default)
+		public override Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
@@ -288,14 +276,10 @@
 			MongoUserLogin mongoUserLogin = user.Logins.FirstOrDefault(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey);
 			if(mongoUserLogin is not null)
 			{
-				if(user.RemoveLogin(mongoUserLogin.ToUserLoginInfo()))
-				{
-					Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(user.Id);
-					UpdateDefinition<TUser> updateDefinition = Builders<TUser>.Update.Set(x => x.Logins, user.Logins);
+				user.RemoveLogin(mongoUserLogin.ToUserLoginInfo());
+			}
 
-					await this.UsersCollection.UpdateOneAsync(predicate, updateDefinition, cancellationToken: cancellationToken);
-				}
-            }
+			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc />
@@ -318,7 +302,6 @@
 			return await this.UsersCollection.Find(x => x.NormalizedEmail == normalizedEmail).FirstOrDefaultAsync(cancellationToken);
 		}
 
-
 		/// <inheritdoc />
 		public override async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default)
 		{
@@ -331,48 +314,48 @@
 		}
 
 		/// <inheritdoc />
-		protected override Task<IdentityUserToken<TKey>> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
+		protected override Task<MongoIdentityUserToken<TKey>> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
 		{
-			IdentityUserToken<TKey> userToken = user.GetToken(loginProvider, name);
-			return Task.FromResult(userToken);
+			cancellationToken.ThrowIfCancellationRequested();
+			this.ThrowIfDisposed();
+			ArgumentNullException.ThrowIfNull(user);
+
+			// HACK
+            MongoIdentityUserToken<TKey> token = user.GetToken(loginProvider, name);
+            return Task.FromResult(token);
 		}
 
 		/// <inheritdoc />
-		protected override async Task AddUserTokenAsync(IdentityUserToken<TKey> token)
+		protected override Task AddUserTokenAsync(MongoIdentityUserToken<TKey> token)
 		{
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(token);
 
-			TUser user = await this.UsersCollection.Find(x => x.Id.Equals(token.UserId)).FirstOrDefaultAsync();
-			if(user is not null)
-			{
-				if(user.AddToken(token))
-				{
-					Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(user.Id);
-					UpdateDefinition<TUser> updateDefinition = Builders<TUser>.Update.Set(x => x.Tokens, user.Tokens);
+			//TUser user = await this.UsersCollection.Find(x => x.Id.Equals(token.UserId)).FirstOrDefaultAsync();
+			token.User.AddToken(token);
 
-					await this.UsersCollection.UpdateOneAsync(predicate, updateDefinition);
-                }
-			}
+			return Task.CompletedTask;
 		}
-		
+
 		/// <inheritdoc />
-		protected override async Task RemoveUserTokenAsync(IdentityUserToken<TKey> token)
+		protected override Task RemoveUserTokenAsync(MongoIdentityUserToken<TKey> token)
 		{
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(token);
 
-			TUser user = await this.UsersCollection.Find(x => x.Id.Equals(token.UserId)).FirstOrDefaultAsync();
-			if (user is not null)
-			{
-				if (user.RemoveToken(token))
-				{
-					Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(user.Id);
-					UpdateDefinition<TUser> updateDefinition = Builders<TUser>.Update.Set(x => x.Tokens, user.Tokens);
+			//TUser user = await this.UsersCollection.Find(x => x.Id.Equals(token.UserId)).FirstOrDefaultAsync();
+			token.User.RemoveToken(token);
 
-					await this.UsersCollection.UpdateOneAsync(predicate, updateDefinition);
-				}
-			}
+			return Task.CompletedTask;
         }
-	}
+
+		/// <inheritdoc />
+		protected override MongoIdentityUserToken<TKey> CreateUserToken(TUser user, string loginProvider, string name, string value)
+		{
+			// HACK
+			MongoIdentityUserToken<TKey> token = base.CreateUserToken(user, loginProvider, name, value);
+			token.User = user;
+			return token;
+		}
+    }
 }
