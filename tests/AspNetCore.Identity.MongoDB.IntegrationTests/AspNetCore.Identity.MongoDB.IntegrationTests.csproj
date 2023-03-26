@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -23,10 +24,12 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Testcontainers" Version="3.0.0" />
+		<PackageReference Include="Testcontainers.MongoDb" Version="3.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\AspNetCore.Identity.MongoDB\AspNetCore.Identity.MongoDB.csproj" />
+		<ProjectReference Include="..\..\src\AspNetCore.Identity.MongoDB\AspNetCore.Identity.MongoDB.csproj" />
 	</ItemGroup>
 
 </Project>

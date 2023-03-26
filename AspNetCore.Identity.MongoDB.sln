@@ -16,11 +16,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{24F9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9BE8804F-BCC0-48CF-9AEC-ED97414B0C78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Identity.MongoDB", "src\AspNetCore.Identity.MongoDB\AspNetCore.Identity.MongoDB.csproj", "{E5EC2474-B380-46DE-9BCB-75EAE945DC1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.MongoDB", "src\AspNetCore.Identity.MongoDB\AspNetCore.Identity.MongoDB.csproj", "{E5EC2474-B380-46DE-9BCB-75EAE945DC1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApp", "samples\SampleWebApp\SampleWebApp.csproj", "{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWebApp", "samples\SampleWebApp\SampleWebApp.csproj", "{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Identity.MongoDB.UnitTests", "tests\AspNetCore.Identity.MongoDB.UnitTests\AspNetCore.Identity.MongoDB.UnitTests.csproj", "{BF2F25DB-6F0D-4E6F-BF91-45474071C754}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.MongoDB.UnitTests", "tests\AspNetCore.Identity.MongoDB.UnitTests\AspNetCore.Identity.MongoDB.UnitTests.csproj", "{BF2F25DB-6F0D-4E6F-BF91-45474071C754}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Identity.MongoDB.IntegrationTests", "tests\AspNetCore.Identity.MongoDB.IntegrationTests\AspNetCore.Identity.MongoDB.IntegrationTests.csproj", "{42B37F56-402B-48AC-9845-3DBE159E15B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{BF2F25DB-6F0D-4E6F-BF91-45474071C754}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF2F25DB-6F0D-4E6F-BF91-45474071C754}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF2F25DB-6F0D-4E6F-BF91-45474071C754}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42B37F56-402B-48AC-9845-3DBE159E15B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42B37F56-402B-48AC-9845-3DBE159E15B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42B37F56-402B-48AC-9845-3DBE159E15B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42B37F56-402B-48AC-9845-3DBE159E15B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{E5EC2474-B380-46DE-9BCB-75EAE945DC1D} = {EDEC7D8F-4C6F-4DE3-8022-17A2A23AB18B}
 		{A8D9FFE5-3E08-479D-9D1C-111D908AE9EB} = {24F9EFE8-010B-48D9-B5D2-EF194BDEAC31}
 		{BF2F25DB-6F0D-4E6F-BF91-45474071C754} = {9BE8804F-BCC0-48CF-9AEC-ED97414B0C78}
+		{42B37F56-402B-48AC-9845-3DBE159E15B0} = {9BE8804F-BCC0-48CF-9AEC-ED97414B0C78}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A52A2019-EEE6-4DAB-B111-C10693C9E03B}

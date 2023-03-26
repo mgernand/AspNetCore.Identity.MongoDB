@@ -4,9 +4,9 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	///     A database context for MongoDB.
-	/// </summary>
-	[PublicAPI]
+    ///     A database context for MongoDB.
+    /// </summary>
+    [PublicAPI]
 	public class MongoDbContext
 	{
         /// <summary>
@@ -46,6 +46,6 @@
         protected virtual string GetCollectionName<TDocument>()
 		{
 			return typeof(TDocument).Name;
-		}
+        }
 	}
 }

@@ -2,10 +2,11 @@ namespace SampleWebApp
 {
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
 	using Microsoft.AspNetCore.Identity;
+	using MongoDB.Driver;
 
 	public static class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -46,13 +47,26 @@ namespace SampleWebApp
 
             // Configure the HTTP request pipeline.
 
+			IMongoDatabase database = app.Services.GetRequiredService<IMongoDatabase>();
+
+			IAsyncCursor<string> cursor = await database.ListCollectionNamesAsync();
+
+			while(await cursor.MoveNextAsync())
+			{
+				IEnumerable<string> names = cursor.Current;
+				foreach (string name in names)
+				{
+					Console.WriteLine(name);
+				}
+            }
+
 			app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.MapRazorPages();
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

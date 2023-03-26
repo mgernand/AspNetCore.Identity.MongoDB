@@ -209,32 +209,16 @@
 		}
 
 		/// <inheritdoc />
-		protected override async Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken)
+		public override async Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
 
-			return await this.UsersCollection.Find(x => x.Id.Equals(userId)).FirstOrDefaultAsync(cancellationToken);
+			return await this.UsersCollection.Find(x => x.NormalizedEmail == normalizedEmail).FirstOrDefaultAsync(cancellationToken);
 		}
 
-		/// <inheritdoc />
-		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
-		{
-			Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(userId) && x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
-			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
-			return user?.GetUserLogin(loginProvider, providerKey);
-		}
-
-		/// <inheritdoc />
-		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
-		{
-			Expression<Func<TUser, bool>> predicate = x => x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
-			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
-			return user?.GetUserLogin(loginProvider, providerKey);
-		}
-
-		/// <inheritdoc />
-		public override Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public override Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
@@ -331,15 +315,6 @@
 		}
 
 		/// <inheritdoc />
-		public override async Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			this.ThrowIfDisposed();
-
-			return await this.UsersCollection.Find(x => x.NormalizedEmail == normalizedEmail).FirstOrDefaultAsync(cancellationToken);
-		}
-
-		/// <inheritdoc />
 		public override async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
@@ -349,6 +324,86 @@
 			FilterDefinition<TUser> filterDefinition = Builders<TUser>.Filter.ElemMatch(x => x.Claims, claims => claims.ClaimValue == claim.Value && claims.ClaimType == claim.Type);
 			return await this.UsersCollection.Find(filterDefinition).ToListAsync(cancellationToken);
 		}
+
+		/// <inheritdoc />
+        public override async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            this.ThrowIfDisposed();
+            ArgumentNullException.ThrowIfNull(user);
+            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+
+            TRole role = await this.RolesCollection.Find(x => x.NormalizedName == normalizedRoleName).FirstOrDefaultAsync(cancellationToken);
+            return role is not null && user.Roles.Any(x => x.Equals(role.Id));
+        }
+
+        /// <inheritdoc />
+        public override async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            this.ThrowIfDisposed();
+            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+
+            TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
+            if (role is not null)
+            {
+                return await this.UsersCollection.Find(x => x.Roles.Contains(role.Id)).ToListAsync(cancellationToken);
+            }
+
+            return new List<TUser>(0);
+        }
+
+        /// <inheritdoc />
+        public override async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            this.ThrowIfDisposed();
+            ArgumentNullException.ThrowIfNull(user);
+            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+
+            TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
+            if (role is null)
+            {
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.RoleNotFound, normalizedRoleName));
+            }
+
+            user.AddRole(role.Id);
+        }
+
+        /// <inheritdoc />
+        public override async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            this.ThrowIfDisposed();
+            ArgumentNullException.ThrowIfNull(user);
+            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+
+            TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
+            if (role is null)
+            {
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.RoleNotFound, normalizedRoleName));
+            }
+
+            user.RemoveRole(role.Id);
+        }
+
+        /// <inheritdoc />
+        public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            this.ThrowIfDisposed();
+            ArgumentNullException.ThrowIfNull(user);
+
+            if (user.Roles.Any())
+            {
+                return await this.RolesCollection
+                    .Find(x => user.Roles.Contains(x.Id))
+                    .Project(x => x.Name)
+                    .ToListAsync(cancellationToken);
+            }
+
+            return new List<string>(0);
+        }
 
 		/// <inheritdoc />
 		protected override Task<MongoIdentityUserToken<TKey>> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
@@ -363,7 +418,32 @@
 		}
 
 		/// <inheritdoc />
-		protected override Task AddUserTokenAsync(MongoIdentityUserToken<TKey> token)
+		protected override async Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			this.ThrowIfDisposed();
+
+			return await this.UsersCollection.Find(x => x.Id.Equals(userId)).FirstOrDefaultAsync(cancellationToken);
+		}
+
+		/// <inheritdoc />
+		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
+		{
+			Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(userId) && x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
+			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
+			return user?.GetUserLogin(loginProvider, providerKey);
+		}
+
+		/// <inheritdoc />
+		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+		{
+			Expression<Func<TUser, bool>> predicate = x => x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
+			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
+			return user?.GetUserLogin(loginProvider, providerKey);
+		}
+
+        /// <inheritdoc />
+        protected override Task AddUserTokenAsync(MongoIdentityUserToken<TKey> token)
 		{
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(token);
@@ -396,18 +476,6 @@
 		}
 
 		/// <inheritdoc />
-		public override async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-			ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
-
-			TRole role = await this.RolesCollection.Find(x => x.NormalizedName == normalizedRoleName).FirstOrDefaultAsync(cancellationToken);
-			return role is not null && user.Roles.Any(x => x.Equals(role.Id));
-		}
-
-		/// <inheritdoc />
 		protected override async Task<TRole> FindRoleAsync(string normalizedRoleName, CancellationToken cancellationToken)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
@@ -433,74 +501,6 @@
 				.FirstOrDefaultAsync(cancellationToken);
 
 			return userRole;
-		}
-
-		/// <inheritdoc />
-		public override async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			this.ThrowIfDisposed();
-			ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
-
-			TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
-			if(role is not null)
-			{
-				return await this.UsersCollection.Find(x => x.Roles.Contains(role.Id)).ToListAsync(cancellationToken);
-			}
-
-			return new List<TUser>(0);
-		}
-
-		/// <inheritdoc />
-		public override async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-			ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
-
-			TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
-			if(role is null)
-			{
-				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.RoleNotFound, normalizedRoleName));
-			}
-
-			user.AddRole(role.Id);
-		}
-
-		/// <inheritdoc />
-		public override async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-			ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
-
-			TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
-			if(role is null)
-			{
-				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.RoleNotFound, normalizedRoleName));
-			}
-
-			user.RemoveRole(role.Id);
-		}
-
-		/// <inheritdoc />
-		public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-
-			if(user.Roles.Any())
-			{
-				return await this.RolesCollection
-					.Find(x => user.Roles.Contains(x.Id))
-					.Project(x => x.Name)
-					.ToListAsync(cancellationToken);
-			}
-
-			return new List<string>(0);
 		}
 	}
 }
