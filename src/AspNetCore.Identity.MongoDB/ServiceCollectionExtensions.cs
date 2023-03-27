@@ -1,7 +1,6 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
 	using System;
-	using global::MongoDB.Bson.Serialization;
 	using global::MongoDB.Bson.Serialization.Conventions;
 	using global::MongoDB.Driver;
     using JetBrains.Annotations;
@@ -23,8 +22,8 @@
 		///  <param name="optionsAction"></param>
 		///  <returns></returns>
 		public static IServiceCollection AddMongoDbContext<TContext>(this IServiceCollection services, Action<MongoDbOptions> optionsAction = null)
-			where TContext : MongoDbContext
-		{
+			where TContext : IdentityMongoDbContext
+        {
 			if(optionsAction is not null)
 			{
 				services.Configure(optionsAction);
@@ -65,6 +64,7 @@
 			});
 
 			services.AddSingleton<TContext>();
+			services.AddSingleton<IdentityMongoDbContext>(serviceProvider => serviceProvider.GetRequiredService<TContext>());
 
 			return services;
 		}
