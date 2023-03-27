@@ -18,7 +18,7 @@
 		/// </summary>
 		/// <param name="app"></param>
 		/// <returns></returns>
-		public static async Task InitializeMongoDb(this IApplicationBuilder app)
+		public static async Task InitializeMongoDbStores(this IApplicationBuilder app)
 		{
 			StoreOptions options = app
 				.ApplicationServices
