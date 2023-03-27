@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SampleWebApp.Pages
 {
-    public class IndexModel : PageModel
+	using Microsoft.Extensions.Logging;
+
+	public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
 

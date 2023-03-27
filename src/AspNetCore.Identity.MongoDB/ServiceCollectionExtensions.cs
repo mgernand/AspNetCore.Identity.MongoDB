@@ -1,10 +1,8 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
 	using System;
-	using global::MongoDB.Bson.Serialization.Conventions;
 	using global::MongoDB.Driver;
     using JetBrains.Annotations;
-	using Microsoft.AspNetCore.Identity;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
 
@@ -31,24 +29,7 @@
 
 			services.AddSingleton<IValidateOptions<MongoDbOptions>, MongoDbOptionsValidator>();
 
-			ConventionPack pack = new ConventionPack
-			{
-				new NamedIdMemberConvention("Id"),
-				new IdGeneratorConvention(),
-				new CamelCaseElementNameConvention(),
-			};
-
-			ConventionRegistry.Register("IdentityConventionPack", pack, type =>
-				IsGenericBaseType(type, typeof(IdentityUser<>)) ||
-				IsGenericBaseType(type, typeof(MongoIdentityUser<>)) ||
-				IsGenericBaseType(type, typeof(IdentityRole<>)) ||
-				IsGenericBaseType(type, typeof(MongoIdentityRole<>)) ||
-				type == typeof(MongoClaim) ||
-				type == typeof(MongoUserLogin) ||
-				type == typeof(MongoUserToken) ||
-				type == typeof(MongoClaim));
-
-            services.AddSingleton<IMongoClient>(serviceProvider =>
+			services.AddSingleton<IMongoClient>(serviceProvider =>
 			{
 				MongoDbOptions options = serviceProvider.GetRequiredService<IOptions<MongoDbOptions>>().Value;
 
@@ -68,22 +49,5 @@
 
 			return services;
 		}
-
-		private static bool IsGenericBaseType(Type currentType, Type genericBaseType)
-		{
-			Type type = currentType;
-			while (type != null)
-			{
-				Type genericType = type.IsGenericType ? type.GetGenericTypeDefinition() : null;
-				if (genericType != null && genericType == genericBaseType)
-				{
-					return true;
-				}
-
-				type = type.BaseType;
-			}
-
-			return false;
-		}
-    }
+	}
 }
