@@ -1,6 +1,7 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
 	using System;
+	using global::MongoDB.Bson.Serialization;
 	using global::MongoDB.Bson.Serialization.Conventions;
 	using global::MongoDB.Driver;
     using JetBrains.Annotations;
