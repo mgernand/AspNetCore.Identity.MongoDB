@@ -4,7 +4,9 @@ using System.Diagnostics;
 
 namespace SampleWebApp.Pages
 {
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	using Microsoft.Extensions.Logging;
+
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [IgnoreAntiforgeryToken]
     public class ErrorModel : PageModel
     {

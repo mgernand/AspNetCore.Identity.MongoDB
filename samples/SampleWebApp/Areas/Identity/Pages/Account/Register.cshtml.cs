@@ -14,7 +14,13 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace SampleWebApp.Areas.Identity.Pages.Account
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Threading;
+	using System.Threading.Tasks;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using Microsoft.Extensions.Logging;
 
 	public class RegisterModel : PageModel
     {

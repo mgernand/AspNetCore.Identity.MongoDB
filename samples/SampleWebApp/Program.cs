@@ -1,7 +1,10 @@
 namespace SampleWebApp
 {
+	using System.Threading.Tasks;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Identity;
+	using Microsoft.Extensions.DependencyInjection;
 
 	public static class Program
     {
@@ -11,6 +14,7 @@ namespace SampleWebApp
 
             // Add services to the container.
 
+			builder.Services.AddDataProtection();
 			builder.Services.AddControllers();
 			builder.Services.AddRazorPages();
 			builder.Services.AddAuthorization();
@@ -46,8 +50,7 @@ namespace SampleWebApp
 
             // Configure the HTTP request pipeline.
 
-			IdentityMongoDbContext context = app.Services.GetRequiredService<IdentityMongoDbContext>();
-			await context.EnsureSchema<MongoIdentityUser, MongoIdentityRole, string>();
+			await app.InitializeMongoDbStores();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -57,5 +60,5 @@ namespace SampleWebApp
             app.MapRazorPages();
             await app.RunAsync();
         }
-    }
+	}
 }
