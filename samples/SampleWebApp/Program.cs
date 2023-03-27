@@ -1,8 +1,9 @@
 namespace SampleWebApp
 {
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using Microsoft.AspNetCore.DataProtection;
 	using Microsoft.AspNetCore.Identity;
-	using MongoDB.Driver;
+    using MongoDB.Driver;
 
 	public static class Program
     {
