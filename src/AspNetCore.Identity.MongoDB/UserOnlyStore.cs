@@ -172,32 +172,16 @@
 		}
 
 		/// <inheritdoc />
-		protected override async Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken)
+		public override async Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
 
-			return await this.UsersCollection.Find(x => x.Id.Equals(userId)).FirstOrDefaultAsync(cancellationToken);
+			return await this.UsersCollection.Find(x => x.NormalizedEmail == normalizedEmail).FirstOrDefaultAsync(cancellationToken);
 		}
 
-		/// <inheritdoc />
-		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
-		{
-			Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(userId) && x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
-			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
-			return user?.GetUserLogin(loginProvider, providerKey);
-		}
-
-		/// <inheritdoc />
-		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
-		{
-			Expression<Func<TUser, bool>> predicate = x => x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
-			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
-			return user?.GetUserLogin(loginProvider, providerKey);
-		}
-
-		/// <inheritdoc />
-		public override Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public override Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
@@ -294,15 +278,6 @@
 		}
 
 		/// <inheritdoc />
-		public override async Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			this.ThrowIfDisposed();
-
-			return await this.UsersCollection.Find(x => x.NormalizedEmail == normalizedEmail).FirstOrDefaultAsync(cancellationToken);
-		}
-
-		/// <inheritdoc />
 		public override async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
@@ -326,7 +301,32 @@
 		}
 
 		/// <inheritdoc />
-		protected override Task AddUserTokenAsync(MongoIdentityUserToken<TKey> token)
+		protected override async Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			this.ThrowIfDisposed();
+
+			return await this.UsersCollection.Find(x => x.Id.Equals(userId)).FirstOrDefaultAsync(cancellationToken);
+		}
+
+		/// <inheritdoc />
+		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
+		{
+			Expression<Func<TUser, bool>> predicate = x => x.Id.Equals(userId) && x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
+			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
+			return user?.GetUserLogin(loginProvider, providerKey);
+		}
+
+		/// <inheritdoc />
+		protected override async Task<IdentityUserLogin<TKey>> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+		{
+			Expression<Func<TUser, bool>> predicate = x => x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
+			TUser user = await this.UsersCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
+			return user?.GetUserLogin(loginProvider, providerKey);
+		}
+
+        /// <inheritdoc />
+        protected override Task AddUserTokenAsync(MongoIdentityUserToken<TKey> token)
 		{
 			this.ThrowIfDisposed();
 			ArgumentNullException.ThrowIfNull(token);
