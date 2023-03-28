@@ -98,7 +98,7 @@
         }
 
         /// <inheritdoc />
-        protected override sealed string GetCollectionName<TDocument>()
+        protected override string GetCollectionName<TDocument>()
 		{
 			Type type = typeof(TDocument);
 
@@ -130,7 +130,7 @@
 		/// <summary>
 		///		Checks if the current type has the given base type.
 		/// </summary>
-		private static bool IsGenericBaseType(Type currentType, Type genericBaseType)
+		protected static bool IsGenericBaseType(Type currentType, Type genericBaseType)
 		{
 			if (currentType == genericBaseType)
 			{

@@ -19,7 +19,7 @@
 		/// <param name="builder">The <see cref="IdentityBuilder"/> instance this method extends.</param>
 		/// <returns>The <see cref="IdentityBuilder"/> instance this method extends.</returns>
         public static IdentityBuilder AddMongoDbStores<TContext>(this IdentityBuilder builder)
-			where TContext : MongoDbContext
+			where TContext : IdentityMongoDbContext
 		{
 			AddStores(builder.Services, builder.UserType, builder.RoleType, typeof(TContext));
             return builder;
