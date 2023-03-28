@@ -50,14 +50,15 @@ namespace SampleWebApp
 
             // Configure the HTTP request pipeline.
 
-			await app.InitializeMongoDbStores();
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.MapRazorPages();
+
+			await app.Services.InitializeMongoDbStores();
+
             await app.RunAsync();
         }
 	}
