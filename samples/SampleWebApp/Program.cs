@@ -57,7 +57,7 @@ namespace SampleWebApp
             app.MapControllers();
             app.MapRazorPages();
 
-			await app.Services.InitializeMongoDbStores();
+			await app.InitializeMongoDbStores();
 
             await app.RunAsync();
         }

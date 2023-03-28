@@ -45,7 +45,12 @@
 			});
 
 			services.AddSingleton<TContext>();
-			services.AddSingleton<IdentityMongoDbContext>(serviceProvider => serviceProvider.GetRequiredService<TContext>());
+			services.AddSingleton<MongoDbContext>(serviceProvider => serviceProvider.GetRequiredService<TContext>());
+
+			if(typeof(TContext) != typeof(IdentityMongoDbContext))
+			{
+				services.AddSingleton<IdentityMongoDbContext>(serviceProvider => serviceProvider.GetRequiredService<TContext>());
+			}
 
 			return services;
 		}

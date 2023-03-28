@@ -1,5 +1,7 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
+	using System.Threading.Tasks;
+	using global::MongoDB.Bson;
 	using global::MongoDB.Driver;
 	using JetBrains.Annotations;
 
@@ -22,15 +24,15 @@
 		/// <summary>
 		///     Gets the <see cref="IMongoDatabase" /> instance.
 		/// </summary>
-		protected IMongoDatabase Database { get; }
+		public IMongoDatabase Database { get; }
+
+        /// <summary>
+        ///     Gets the <see cref="IMongoClient" /> instance.
+        /// </summary>
+		public IMongoClient Client { get; }
 
 		/// <summary>
-		///     Gets the <see cref="IMongoClient" /> instance.
-		/// </summary>
-		protected IMongoClient Client { get; }
-
-		/// <summary>
-		///     Returns a collection for a document type that has an (optional) partition key.
+		///     Returns a collection for a document type.
 		/// </summary>
 		/// <typeparam name="TDocument"></typeparam>
 		public IMongoCollection<TDocument> GetCollection<TDocument>()
@@ -39,11 +41,28 @@
 		}
 
 		/// <summary>
+		///		Checks of the collection for the document already exist int eh database.
+		/// </summary>
+		/// <typeparam name="TDocument"></typeparam>
+		/// <returns></returns>
+		public async Task<bool> CollectionExistsAsync<TDocument>()
+		{
+			string collectionName = this.GetCollectionName<TDocument>();
+			BsonDocument filter = new BsonDocument("name", collectionName);
+			IAsyncCursor<BsonDocument> collections = await this.Database.ListCollectionsAsync(new ListCollectionsOptions
+			{
+				Filter = filter
+			});
+
+			return await collections.AnyAsync();
+		}
+
+        /// <summary>
         ///     Given the document type and the partition key, returns the name of the collection it belongs to.
         /// </summary>
         /// <typeparam name="TDocument">The type representing a Document.</typeparam>
         /// <returns>The name of the collection.</returns>
-        protected virtual string GetCollectionName<TDocument>()
+        public virtual string GetCollectionName<TDocument>()
 		{
 			return typeof(TDocument).Name;
         }
