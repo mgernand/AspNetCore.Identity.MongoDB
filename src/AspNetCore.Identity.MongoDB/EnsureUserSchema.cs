@@ -33,19 +33,19 @@
 				await collection.Indexes.CreateManyAsync(new List<CreateIndexModel<TUser>>
 				{
 					CreateIndexModel(x => x.NormalizedUserName),
-					CreateIndexModel(x => x.NormalizedEmail)
+					CreateIndexModel(x => x.NormalizedEmail, false)
 				});
 			}
 		}
 
-		private static CreateIndexModel<TUser> CreateIndexModel(Expression<Func<TUser, object>> field)
+		private static CreateIndexModel<TUser> CreateIndexModel(Expression<Func<TUser, object>> field, bool unique = true)
 		{
 			return new CreateIndexModel<TUser>(
 				Builders<TUser>.IndexKeys.Ascending(field),
 				new CreateIndexOptions<TUser>
 				{
-					Unique = true
-				});
+					Unique = unique
+                });
 		}
 	}
 }
