@@ -9,7 +9,7 @@
 
 	[UsedImplicitly]
 	internal sealed class EnsureUserSchema<TUser, TKey> : IEnsureSchema
-		where TUser : MongoIdentityUser<TKey>
+        where TUser : MongoIdentityUser<TKey>
 		where TKey : IEquatable<TKey>
 	{
 		private readonly MongoDbContext context;
@@ -32,19 +32,20 @@
 
 				await collection.Indexes.CreateManyAsync(new List<CreateIndexModel<TUser>>
 				{
-					CreateIndexModel(x => x.NormalizedUserName),
+					CreateIndexModel(x => x.NormalizedUserName, true),
 					CreateIndexModel(x => x.NormalizedEmail, false)
 				});
 			}
 		}
 
-		private static CreateIndexModel<TUser> CreateIndexModel(Expression<Func<TUser, object>> field, bool unique = true)
+		private static CreateIndexModel<TUser> CreateIndexModel(Expression<Func<TUser, object>> field, bool unique)
 		{
 			return new CreateIndexModel<TUser>(
 				Builders<TUser>.IndexKeys.Ascending(field),
 				new CreateIndexOptions<TUser>
 				{
-					Unique = unique
+					Unique = unique,
+					Name = $"{field.GetFieldName()}_asc",
                 });
 		}
 	}

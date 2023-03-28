@@ -3,9 +3,10 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
+	using System.Text.RegularExpressions;
 	using System.Threading.Tasks;
-	using global::MongoDB.Driver;
-	using JetBrains.Annotations;
+    using global::MongoDB.Driver;
+    using JetBrains.Annotations;
 
 	[UsedImplicitly]
 	internal sealed class EnsureRoleSchema<TRole, TKey> : IEnsureSchema
@@ -43,8 +44,9 @@
 				Builders<TRole>.IndexKeys.Ascending(field),
 				new CreateIndexOptions<TRole>
 				{
-					Unique = true
-				});
+					Unique = true,
+					Name = $"{field.GetFieldName()}_asc",
+                });
 		}
 	}
 }
