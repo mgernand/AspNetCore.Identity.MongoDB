@@ -105,12 +105,12 @@ how to change them into custom names.
 ## Initialize the MongoDB driver
 
 After configuring the service of the system one has to initialize the MongoDB stores database
-using the ```IApplicationBuilder``` extension ```InitializeMongoDbStores```. The configuration 
+using the ```IServiceProvider``` extension ```InitializeMongoDbStores```. The configuration 
 will ensure the needed conventions are setup for the MongoDB driver and will ensure that the 
 collections are created with the needed indexes for the user and role entities.
 
 ```C#
-await app.InitializeMongoDbStores();
+await app.Services.InitializeMongoDbStores();
 ```
 
 ## Data Protection support
