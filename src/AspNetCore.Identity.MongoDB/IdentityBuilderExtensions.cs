@@ -22,7 +22,7 @@
 			where TContext : IdentityMongoDbContext
 		{
 			AddStores(builder.Services, builder.UserType, builder.RoleType, typeof(TContext));
-            return builder;
+			return builder;
 		}
 
 		private static void AddStores(IServiceCollection services, Type userType, Type roleType, Type contextType)
@@ -50,12 +50,21 @@
                 // Configure role store.
 				Type roleStoreType = typeof(RoleStore<,,>).MakeGenericType(roleType, contextType, keyType);
 				services.TryAddScoped(typeof(IRoleStore<>).MakeGenericType(roleType), roleStoreType);
+
+				Type ensureUserSchemaType = typeof(EnsureUserSchema<,>).MakeGenericType(userType, keyType);
+				services.AddSingleton(typeof(IEnsureSchema), ensureUserSchemaType);
+
+				Type ensureRoleSchemaType = typeof(EnsureRoleSchema<,>).MakeGenericType(roleType, keyType);
+				services.AddSingleton(typeof(IEnsureSchema), ensureRoleSchemaType);
             }
 			else
 			{
                 // No roles: configure user only store.
 				Type userStoreType = typeof(UserOnlyStore<,,>).MakeGenericType(userType, contextType, keyType);
 				services.TryAddScoped(typeof(IUserStore<>).MakeGenericType(userType), userStoreType);
+
+				Type ensureUserSchemaType = typeof(EnsureUserSchema<,>).MakeGenericType(userType, keyType);
+				services.AddSingleton(typeof(IEnsureSchema), ensureUserSchemaType);
             }
 		}
 
