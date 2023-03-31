@@ -19,9 +19,13 @@
 		/// <returns></returns>
 		public static string GetFieldName<T>(this Expression<Func<T, object>> field)
 		{
-			MemberExpression memberExpression = (MemberExpression)field.Body;
-			string fieldName = memberExpression.Member.Name;
+			if (field.Body is not MemberExpression memberExpression)
+			{
+				UnaryExpression unaryExpression = (UnaryExpression)field.Body;
+				memberExpression = unaryExpression.Operand as MemberExpression;
+			}
 
+			string fieldName = memberExpression?.Member.Name;
 			return Camelize(fieldName);
 		}
 
