@@ -26,7 +26,7 @@
 		}
 
 		[OneTimeSetUp]
-		public void OneTimeSetUp()
+		public async Task OneTimeSetUp()
 		{
 			IServiceCollection services = new ServiceCollection();
 
@@ -51,6 +51,8 @@
 			.AddMongoDbStores<IdentityMongoDbContext>();
 
 			this.serviceProvider = services.BuildServiceProvider();
+
+			await this.serviceProvider.InitializeMongoDbStores();
 		}
 
 		private static MongoIdentityUser CreateUser(string userName, string email = null)

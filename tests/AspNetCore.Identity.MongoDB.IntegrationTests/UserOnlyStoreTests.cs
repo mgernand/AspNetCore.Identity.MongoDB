@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Security.Claims;
-	using System.Threading;
 	using System.Threading.Tasks;
 	using FluentAssertions;
 	using global::MongoDB.Driver;
@@ -28,8 +27,9 @@
 			this.context = this.serviceProvider.GetRequiredService<IdentityMongoDbContext>();
         }
 
+
 		[OneTimeSetUp]
-		public void OneTimeSetUp()
+		public async Task OneTimeSetUp()
 		{
 			IServiceCollection services = new ServiceCollection();
 			services.AddMongoDbContext<IdentityMongoDbContext>(options =>
@@ -39,9 +39,11 @@
 			});
 
 			this.serviceProvider = services.BuildServiceProvider();
-        }
 
-		private UserOnlyStore GetUserStore()
+			await this.serviceProvider.InitializeMongoDbStores();
+		}
+
+        private UserOnlyStore GetUserStore()
 		{
 			UserOnlyStore store = new UserOnlyStore(this.context);
 			store.Should().NotBeNull();

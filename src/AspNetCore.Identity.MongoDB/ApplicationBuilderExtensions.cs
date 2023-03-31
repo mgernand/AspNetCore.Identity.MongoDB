@@ -1,6 +1,8 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
+	using System;
 	using System.Collections.Generic;
+	using System.Runtime.CompilerServices;
 	using System.Threading.Tasks;
 	using global::MongoDB.Bson.Serialization.Conventions;
 	using JetBrains.Annotations;
@@ -22,8 +24,12 @@
 		/// <returns></returns>
 		public static async Task InitializeMongoDbStores(this IApplicationBuilder applicationBuilder)
 		{
-			StoreOptions options = applicationBuilder
-				.ApplicationServices
+			await applicationBuilder.ApplicationServices.InitializeMongoDbStores();
+		}
+
+		internal static async Task InitializeMongoDbStores(this IServiceProvider serviceProvider)
+		{
+			StoreOptions options = serviceProvider
 				.GetRequiredService<IOptions<IdentityOptions>>()
 				.Value.Stores;
 
@@ -34,18 +40,18 @@
 				new CamelCaseElementNameConvention()
 			};
 
-			if(options.ProtectPersonalData)
+			if (options.ProtectPersonalData)
 			{
-				pack.Add(new DataProtectionConvention(applicationBuilder.ApplicationServices));
+				pack.Add(new DataProtectionConvention(serviceProvider));
 			}
-			
+
 			ConventionRegistry.Register("IdentityConventionPack", pack, _ => true);
 
-			IEnumerable<IEnsureSchema> ensureSchemata = applicationBuilder.ApplicationServices.GetServices<IEnsureSchema>();
-			foreach(IEnsureSchema ensureSchema in ensureSchemata)
+			IEnumerable<IEnsureSchema> ensureSchemata = serviceProvider.GetServices<IEnsureSchema>();
+			foreach (IEnsureSchema ensureSchema in ensureSchemata)
 			{
 				await ensureSchema.ExecuteAsync();
 			}
-		}
+        }
 	}
 }
