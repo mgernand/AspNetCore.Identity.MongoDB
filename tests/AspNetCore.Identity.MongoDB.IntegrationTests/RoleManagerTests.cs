@@ -26,7 +26,7 @@
 		}
 
 		[OneTimeSetUp]
-		public void OneTimeSetUp()
+		public async Task OneTimeSetUp()
 		{
 			IServiceCollection services = new ServiceCollection();
 
@@ -49,6 +49,8 @@
 			.AddMongoDbStores<IdentityMongoDbContext>();
 
             this.serviceProvider = services.BuildServiceProvider();
+
+			await this.serviceProvider.InitializeMongoDbStores();
 		}
 
 		private static MongoIdentityRole CreateRole(string roleName)

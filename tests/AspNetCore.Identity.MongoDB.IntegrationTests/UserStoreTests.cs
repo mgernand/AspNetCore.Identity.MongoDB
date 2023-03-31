@@ -27,20 +27,22 @@
             this.context = this.serviceProvider.GetRequiredService<IdentityMongoDbContext>();
         }
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            IServiceCollection services = new ServiceCollection();
-            services.AddMongoDbContext<IdentityMongoDbContext>(options =>
-            {
-                options.ConnectionString = GlobalFixture.ConnectionString;
-                options.DatabaseName = GlobalFixture.Database;
-            });
+		[OneTimeSetUp]
+		public async Task OneTimeSetUp()
+		{
+			IServiceCollection services = new ServiceCollection();
+			services.AddMongoDbContext<IdentityMongoDbContext>(options =>
+			{
+				options.ConnectionString = GlobalFixture.ConnectionString;
+				options.DatabaseName = GlobalFixture.Database;
+			});
 
-            this.serviceProvider = services.BuildServiceProvider();
-        }
+			this.serviceProvider = services.BuildServiceProvider();
 
-		private RoleStore GetRoleStore()
+			await this.serviceProvider.InitializeMongoDbStores();
+		}
+
+        private RoleStore GetRoleStore()
 		{
 			RoleStore store = new RoleStore(this.context);
 			store.Should().NotBeNull();
