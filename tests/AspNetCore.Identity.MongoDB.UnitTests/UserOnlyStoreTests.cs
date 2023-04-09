@@ -42,7 +42,7 @@
         [Test]
         public async Task ShouldThrowWhenDisposed()
         {
-			UserOnlyStore store = new UserOnlyStore(new IdentityMongoDbContext(this.databaseMock.Object));
+			UserOnlyStore store = new UserOnlyStore(new MongoDbContext(this.databaseMock.Object));
             store.Should().NotBeNull();
 
             store.Dispose();
@@ -66,7 +66,7 @@
         [Test]
         public async Task ShouldThrowWhenCancelled()
         {
-			UserOnlyStore store = new UserOnlyStore(new IdentityMongoDbContext(this.databaseMock.Object));
+			UserOnlyStore store = new UserOnlyStore(new MongoDbContext(this.databaseMock.Object));
             store.Should().NotBeNull();
 
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -91,7 +91,7 @@
         [Test]
         public async Task ShouldThrowWhenParameterIsNull()
         {
-			UserOnlyStore store = new UserOnlyStore(new IdentityMongoDbContext(this.databaseMock.Object));
+			UserOnlyStore store = new UserOnlyStore(new MongoDbContext(this.databaseMock.Object));
             store.Should().NotBeNull();
 
 			await ShouldThrowArgumentNullException(async () => await store.CreateAsync(null));

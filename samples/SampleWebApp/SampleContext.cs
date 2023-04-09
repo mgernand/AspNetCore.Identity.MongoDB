@@ -2,11 +2,12 @@
 {
 	using JetBrains.Annotations;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using Microsoft.AspNetCore.Identity;
 	using MongoDB.Driver;
 
 	/// <inheritdoc />
 	[PublicAPI]
-	public sealed class SampleContext : IdentityMongoDbContext
+	public sealed class SampleContext : MongoDbContext
     {
 		/// <inheritdoc />
 		public SampleContext(IMongoDatabase database) 
@@ -15,9 +16,20 @@
 		}
 
 		/// <inheritdoc />
-		protected override string UsersCollectionName => "Users";
+		public override string GetCollectionName<TDocument>()
+		{
+			string collectionName = null;
 
-		/// <inheritdoc />
-		protected override string RolesCollectionName => "Roles";
+			if (IsGenericBaseType(typeof(TDocument), typeof(IdentityUser<>)))
+			{
+				collectionName = "Users";
+			}
+			else if (IsGenericBaseType(typeof(TDocument), typeof(IdentityRole<>)))
+			{
+				collectionName = "Roles";
+			}
+
+			return collectionName ?? base.GetCollectionName<TDocument>();
+		}
 	}
 }

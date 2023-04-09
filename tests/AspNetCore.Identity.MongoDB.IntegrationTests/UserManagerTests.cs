@@ -32,7 +32,7 @@
 
 			services.AddDataProtection();
 
-			services.AddMongoDbContext<IdentityMongoDbContext>(options =>
+			services.AddMongoDbContext<MongoDbContext>(options =>
 			{
 				options.ConnectionString = GlobalFixture.ConnectionString;
 				options.DatabaseName = GlobalFixture.Database;
@@ -48,7 +48,7 @@
 			})
 			.AddRoles<MongoIdentityRole>()
 			.AddDefaultTokenProviders()
-			.AddMongoDbStores<IdentityMongoDbContext>();
+			.AddMongoDbStores<MongoDbContext>();
 
 			this.serviceProvider = services.BuildServiceProvider();
 

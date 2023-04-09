@@ -16,7 +16,7 @@
 	public class UserStoreTests
 	{
         private IServiceProvider serviceProvider;
-        private IdentityMongoDbContext context;
+        private MongoDbContext context;
 
         [SetUp]
         public async Task SetUp()
@@ -24,14 +24,14 @@
             IMongoClient client = this.serviceProvider.GetRequiredService<IMongoClient>();
             await client.DropDatabaseAsync(GlobalFixture.Database);
 
-            this.context = this.serviceProvider.GetRequiredService<IdentityMongoDbContext>();
+            this.context = this.serviceProvider.GetRequiredService<MongoDbContext>();
         }
 
 		[OneTimeSetUp]
 		public async Task OneTimeSetUp()
 		{
 			IServiceCollection services = new ServiceCollection();
-			services.AddMongoDbContext<IdentityMongoDbContext>(options =>
+			services.AddMongoDbContext<MongoDbContext>(options =>
 			{
 				options.ConnectionString = GlobalFixture.ConnectionString;
 				options.DatabaseName = GlobalFixture.Database;
