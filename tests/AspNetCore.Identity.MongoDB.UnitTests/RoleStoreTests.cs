@@ -41,7 +41,7 @@
         [Test]
 		public async Task ShouldThrowWhenDisposed()
 		{
-			RoleStore store = new RoleStore(new IdentityMongoDbContext(this.databaseMock.Object));
+			RoleStore store = new RoleStore(new MongoDbContext(this.databaseMock.Object));
 			store.Should().NotBeNull();
 
 			store.Dispose();
@@ -59,7 +59,7 @@
 		[Test]
 		public async Task ShouldThrowWhenCancelled()
 		{
-			RoleStore store = new RoleStore(new IdentityMongoDbContext(this.databaseMock.Object));
+			RoleStore store = new RoleStore(new MongoDbContext(this.databaseMock.Object));
 			store.Should().NotBeNull();
 
 			CancellationTokenSource cts = new CancellationTokenSource();
@@ -78,7 +78,7 @@
 		[Test]
 		public async Task ShouldThrowWhenParameterIsNull()
 		{
-			RoleStore store = new RoleStore(new IdentityMongoDbContext(this.databaseMock.Object));
+			RoleStore store = new RoleStore(new MongoDbContext(this.databaseMock.Object));
 			store.Should().NotBeNull();
 
 			await ShouldThrowArgumentNullException(async () => await store.CreateAsync(null));

@@ -13,15 +13,15 @@
 	public static class ServiceCollectionExtensions
 	{
 		///  <summary>
-		/// 		Registers the given context as a service in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+		/// 		Registers the given context as a service in the <see cref="IServiceCollection" />.
 		///  </summary>
 		///  <typeparam name="TContext"></typeparam>
 		///  <param name="services"></param>
 		///  <param name="optionsAction"></param>
 		///  <returns></returns>
 		public static IServiceCollection AddMongoDbContext<TContext>(this IServiceCollection services, Action<MongoDbOptions> optionsAction = null)
-			where TContext : IdentityMongoDbContext
-        {
+			where TContext : MongoDbContext
+		{
 			if(optionsAction is not null)
 			{
 				services.Configure(optionsAction);
@@ -45,12 +45,6 @@
 			});
 
 			services.AddSingleton<TContext>();
-			services.AddSingleton<MongoDbContext>(serviceProvider => serviceProvider.GetRequiredService<TContext>());
-
-			if(typeof(TContext) != typeof(IdentityMongoDbContext))
-			{
-				services.AddSingleton<IdentityMongoDbContext>(serviceProvider => serviceProvider.GetRequiredService<TContext>());
-			}
 
 			return services;
 		}

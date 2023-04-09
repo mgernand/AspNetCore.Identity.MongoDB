@@ -1,5 +1,6 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
+	using System;
 	using System.Threading.Tasks;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Driver;
@@ -66,5 +67,30 @@
 		{
 			return typeof(TDocument).Name;
         }
+
+		/// <summary>
+		///		Checks if the current type has the given base type.
+		/// </summary>
+		protected static bool IsGenericBaseType(Type currentType, Type genericBaseType)
+		{
+			if (currentType == genericBaseType)
+			{
+				return true;
+			}
+
+			Type type = currentType;
+			while (type != null)
+			{
+				Type genericType = type.IsGenericType ? type.GetGenericTypeDefinition() : null;
+				if (genericType != null && genericType == genericBaseType)
+				{
+					return true;
+				}
+
+				type = type.BaseType;
+			}
+
+			return false;
+		}
 	}
 }

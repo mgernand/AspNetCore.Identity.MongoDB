@@ -19,7 +19,7 @@
 		/// <param name="builder">The <see cref="IdentityBuilder"/> instance this method extends.</param>
 		/// <returns>The <see cref="IdentityBuilder"/> instance this method extends.</returns>
         public static IdentityBuilder AddMongoDbStores<TContext>(this IdentityBuilder builder)
-			where TContext : IdentityMongoDbContext
+			where TContext : MongoDbContext
 		{
 			AddStores(builder.Services, builder.UserType, builder.RoleType, typeof(TContext));
 			return builder;
@@ -84,5 +84,30 @@
 
 			return null;
 		}
-    }
+
+		/// <summary>
+		///		Checks if the current type has the given base type.
+		/// </summary>
+		private static bool IsGenericBaseType(Type currentType, Type genericBaseType)
+		{
+			if (currentType == genericBaseType)
+			{
+				return true;
+			}
+
+			Type type = currentType;
+			while (type != null)
+			{
+				Type genericType = type.IsGenericType ? type.GetGenericTypeDefinition() : null;
+				if (genericType != null && genericType == genericBaseType)
+				{
+					return true;
+				}
+
+				type = type.BaseType;
+			}
+
+			return false;
+		}
+	}
 }

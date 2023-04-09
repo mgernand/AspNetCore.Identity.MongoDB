@@ -1,5 +1,6 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
+	using System;
 	using JetBrains.Annotations;
 
 	/// <summary>
@@ -17,5 +18,10 @@
 		///		The database name.
 		/// </summary>
 		public string DatabaseName { get; set; }
+
+		/// <summary>
+		///		Gets or sets a function that can overrides the default collection naming.
+		/// </summary>
+		public Func<Type, string> CollectionNameFactory { get; set; }
 	}
 }

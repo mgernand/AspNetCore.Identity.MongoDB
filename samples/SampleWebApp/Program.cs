@@ -59,7 +59,7 @@ namespace SampleWebApp
 
 			await app.InitializeMongoDbStores();
 
-            await app.RunAsync();
+			await app.RunAsync();
         }
 	}
 }
