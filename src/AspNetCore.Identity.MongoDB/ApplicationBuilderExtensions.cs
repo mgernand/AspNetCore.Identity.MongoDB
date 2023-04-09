@@ -27,7 +27,12 @@
 			await applicationBuilder.ApplicationServices.InitializeMongoDbStores();
 		}
 
-		internal static async Task InitializeMongoDbStores(this IServiceProvider serviceProvider)
+		/// <summary>
+		///     Initializes the MongoDB driver and ensures schema and indexes.
+		/// </summary>
+		/// <param name="serviceProvider"></param>
+		/// <returns></returns>
+		public static async Task InitializeMongoDbStores(this IServiceProvider serviceProvider)
 		{
 			StoreOptions options = serviceProvider
 				.GetRequiredService<IOptions<IdentityOptions>>()
