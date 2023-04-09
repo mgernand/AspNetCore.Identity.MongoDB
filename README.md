@@ -56,7 +56,7 @@ If no custom enities are needed, one can use the default implementations using `
 ## Usage
 
 To use the MongoDB stores with ASP.NET Identity use the ```IdentityBuilder``` extension ```AddMongoDbStores```
-and configure the ```IdentityMongoDbContext``` using the ```AddMongoDbContext``` extension. 
+and configure the ```MongoDbContext``` using the ```AddMongoDbContext``` extension. 
 
 The stores support user/role and user-only configuration.
 
@@ -67,7 +67,7 @@ builder.Services
 	.AddAuthentication(IdentityConstants.ApplicationScheme)
 	.AddIdentityCookies();
 
-builder.Services.AddMongoDbContext<IdentityMongoDbContext>(options =>
+builder.Services.AddMongoDbContext<MongoDbContext>(options =>
 {
 	options.ConnectionString = "mongodb://localhost:27017";
 	options.DatabaseName = "identity";
@@ -85,7 +85,7 @@ builder.Services
 	.AddAuthentication(IdentityConstants.ApplicationScheme)
 	.AddIdentityCookies();
 
-builder.Services.AddMongoDbContext<IdentityMongoDbContext>(options =>
+builder.Services.AddMongoDbContext<MongoDbContext>(options =>
 {
 	options.ConnectionString = "mongodb://localhost:27017";
 	options.DatabaseName = "identity";
@@ -97,8 +97,8 @@ builder.Services.AddMongoDbContext<IdentityMongoDbContext>(options =>
 
 ## Using a custom context
 
-To use a custom ```IdentityMongoDbContext``` just create a new class that inherits from 
-```IdentityMongoDbContext```. Using this context one can change the used collection names.
+To use a custom ```MongoDbContext``` just create a new class that inherits from 
+```MongoDbContext```. Using this context one can change the used collection names.
 The default names are ```AspNetUsers``` and ```AspNetRoles```. The sample application shows
 how to change them into custom names.
 
