@@ -9,6 +9,7 @@
 	using System.Threading.Tasks;
 	using global::MongoDB.Driver;
 	using JetBrains.Annotations;
+	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Identity;
 
 	/// <summary>

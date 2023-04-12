@@ -1,12 +1,14 @@
 ﻿namespace MadEyeMatt.AspNetCore.Identity.MongoDB
 {
-	using System;
-	using JetBrains.Annotations;
+    using System;
+    using JetBrains.Annotations;
+	using MadEyeMatt.AspNetCore.Identity.MongoDB.Initialization;
+	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Identity;
-	using Microsoft.Extensions.DependencyInjection;
-	using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
 
-	/// <summary>
+    /// <summary>
     ///		Extensions methods for the <see cref="IdentityBuilder"/> type.
     /// </summary>
     [PublicAPI]
@@ -51,11 +53,11 @@
 				Type roleStoreType = typeof(RoleStore<,,>).MakeGenericType(roleType, contextType, keyType);
 				services.TryAddScoped(typeof(IRoleStore<>).MakeGenericType(roleType), roleStoreType);
 
-				Type ensureUserSchemaType = typeof(EnsureUserSchema<,>).MakeGenericType(userType, keyType);
-				services.AddSingleton(typeof(IEnsureSchema), ensureUserSchemaType);
+				Type ensureUserSchemaType = typeof(EnsureUserSchema<,,>).MakeGenericType(userType, keyType, contextType);
+				services.AddEnsureSchema(ensureUserSchemaType);
 
-				Type ensureRoleSchemaType = typeof(EnsureRoleSchema<,>).MakeGenericType(roleType, keyType);
-				services.AddSingleton(typeof(IEnsureSchema), ensureRoleSchemaType);
+				Type ensureRoleSchemaType = typeof(EnsureRoleSchema<,,>).MakeGenericType(roleType, keyType, contextType);
+				services.AddEnsureSchema(ensureRoleSchemaType);
             }
 			else
 			{
@@ -63,8 +65,8 @@
 				Type userStoreType = typeof(UserOnlyStore<,,>).MakeGenericType(userType, contextType, keyType);
 				services.TryAddScoped(typeof(IUserStore<>).MakeGenericType(userType), userStoreType);
 
-				Type ensureUserSchemaType = typeof(EnsureUserSchema<,>).MakeGenericType(userType, keyType);
-				services.AddSingleton(typeof(IEnsureSchema), ensureUserSchemaType);
+				Type ensureUserSchemaType = typeof(EnsureUserSchema<,,>).MakeGenericType(userType, keyType, contextType);
+				services.AddEnsureSchema(ensureUserSchemaType);
             }
 		}
 
