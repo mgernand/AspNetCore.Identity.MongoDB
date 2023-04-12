@@ -6,6 +6,8 @@
 	using FluentAssertions;
 	using global::MongoDB.Driver;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using MadEyeMatt.MongoDB.DbContext;
+	using MadEyeMatt.MongoDB.DbContext.Initialization;
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.Extensions.DependencyInjection;
 	using NUnit.Framework;
@@ -34,8 +36,7 @@
 
 			services.AddMongoDbContext<MongoDbContext>(options =>
 			{
-				options.ConnectionString = GlobalFixture.ConnectionString;
-				options.DatabaseName = GlobalFixture.Database;
+				options.UseDatabase(GlobalFixture.ConnectionString, GlobalFixture.Database);
 			})
 			.AddIdentityCore<MongoIdentityUser>(options =>
 			{

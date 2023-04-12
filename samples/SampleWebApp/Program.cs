@@ -2,6 +2,7 @@ namespace SampleWebApp
 {
 	using System.Threading.Tasks;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +27,7 @@ namespace SampleWebApp
 
 			builder.Services.AddMongoDbContext<SampleContext>(options =>
 			{
-				options.ConnectionString = "mongodb://localhost:27017";
-				options.DatabaseName = "identity";
+				options.UseDatabase("mongodb://localhost:27017", "identity");
 			})
 			.AddIdentityCore<MongoIdentityUser>(options =>
 			{
@@ -57,7 +57,10 @@ namespace SampleWebApp
             app.MapControllers();
             app.MapRazorPages();
 
-			await app.InitializeMongoDbStores();
+			await using(AsyncServiceScope serviceScope = app.Services.CreateAsyncScope())
+			{
+				await serviceScope.ServiceProvider.InitializeMongoDbIdentityStores();
+			}
 
 			await app.RunAsync();
         }

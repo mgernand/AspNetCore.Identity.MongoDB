@@ -1,20 +1,14 @@
 ﻿namespace SampleWebApp
 {
 	using JetBrains.Annotations;
-	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Identity;
-	using MongoDB.Driver;
+	using System;
 
 	/// <inheritdoc />
 	[PublicAPI]
 	public sealed class SampleContext : MongoDbContext
     {
-		/// <inheritdoc />
-		public SampleContext(IMongoDatabase database) 
-			: base(database)
-		{
-		}
-
 		/// <inheritdoc />
 		public override string GetCollectionName<TDocument>()
 		{
@@ -30,6 +24,31 @@
 			}
 
 			return collectionName ?? base.GetCollectionName<TDocument>();
+		}
+
+		/// <summary>
+		///		Checks if the current type has the given base type.
+		/// </summary>
+		private static bool IsGenericBaseType(Type currentType, Type genericBaseType)
+		{
+			if (currentType == genericBaseType)
+			{
+				return true;
+			}
+
+			Type type = currentType;
+			while (type != null)
+			{
+				Type genericType = type.IsGenericType ? type.GetGenericTypeDefinition() : null;
+				if (genericType != null && genericType == genericBaseType)
+				{
+					return true;
+				}
+
+				type = type.BaseType;
+			}
+
+			return false;
 		}
 	}
 }

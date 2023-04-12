@@ -7,7 +7,8 @@
     using FluentAssertions;
 	using global::MongoDB.Driver;
     using MadEyeMatt.AspNetCore.Identity.MongoDB;
-    using Moq;
+	using MadEyeMatt.MongoDB.DbContext;
+	using Moq;
     using NUnit.Framework;
 
     [TestFixture]
@@ -42,7 +43,7 @@
 		[Test]
         public async Task ShouldThrowWhenDisposed()
         {
-			UserStore store = new UserStore(new MongoDbContext(this.databaseMock.Object));
+			UserStore store = new UserStore(new MongoDbContext(new MongoDbContextOptions<MongoDbContext>()));
             store.Should().NotBeNull();
 
             store.Dispose();
@@ -71,7 +72,7 @@
         [Test]
         public async Task ShouldThrowWhenCancelled()
         {
-			UserStore store = new UserStore(new MongoDbContext(this.databaseMock.Object));
+			UserStore store = new UserStore(new MongoDbContext(new MongoDbContextOptions<MongoDbContext>()));
             store.Should().NotBeNull();
 
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -101,7 +102,7 @@
         [Test]
         public async Task ShouldThrowWhenParameterIsNull()
         {
-			UserStore store = new UserStore(new MongoDbContext(this.databaseMock.Object));
+			UserStore store = new UserStore(new MongoDbContext(new MongoDbContextOptions<MongoDbContext>()));
             store.Should().NotBeNull();
 
 			await ShouldThrowArgumentNullException(async () => await store.CreateAsync(null));

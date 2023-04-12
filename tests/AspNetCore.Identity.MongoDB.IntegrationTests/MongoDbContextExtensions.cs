@@ -3,8 +3,9 @@
 	using System.Threading.Tasks;
 	using global::MongoDB.Driver;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using MadEyeMatt.MongoDB.DbContext;
 
-	public static class MongoDbContextExtensions
+	internal static class MongoDbContextExtensions
 	{
 		public static async Task<bool> ExistsRole(this MongoDbContext context, string roleId)
 		{
