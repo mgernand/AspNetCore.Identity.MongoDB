@@ -9,6 +9,11 @@
 	[PublicAPI]
 	public sealed class SampleContext : MongoDbContext
     {
+		public SampleContext(MongoDbContextOptions options) 
+			: base(options)
+		{
+		}
+
 		/// <inheritdoc />
 		public override string GetCollectionName<TDocument>()
 		{

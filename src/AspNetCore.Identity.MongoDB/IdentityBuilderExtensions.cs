@@ -4,7 +4,6 @@
     using JetBrains.Annotations;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB.Initialization;
 	using MadEyeMatt.MongoDB.DbContext;
-	using MadEyeMatt.MongoDB.DbContext.Initialization;
 	using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -55,10 +54,10 @@
 				services.TryAddScoped(typeof(IRoleStore<>).MakeGenericType(roleType), roleStoreType);
 
 				Type ensureUserSchemaType = typeof(EnsureUserSchema<,,>).MakeGenericType(userType, keyType, contextType);
-				services.AddSingleton(typeof(IEnsureSchema), ensureUserSchemaType);
+				services.AddEnsureSchema(ensureUserSchemaType);
 
 				Type ensureRoleSchemaType = typeof(EnsureRoleSchema<,,>).MakeGenericType(roleType, keyType, contextType);
-				services.AddSingleton(typeof(IEnsureSchema), ensureRoleSchemaType);
+				services.AddEnsureSchema(ensureRoleSchemaType);
             }
 			else
 			{
@@ -67,7 +66,7 @@
 				services.TryAddScoped(typeof(IUserStore<>).MakeGenericType(userType), userStoreType);
 
 				Type ensureUserSchemaType = typeof(EnsureUserSchema<,,>).MakeGenericType(userType, keyType, contextType);
-				services.AddSingleton(typeof(IEnsureSchema), ensureUserSchemaType);
+				services.AddEnsureSchema(ensureUserSchemaType);
             }
 		}
 

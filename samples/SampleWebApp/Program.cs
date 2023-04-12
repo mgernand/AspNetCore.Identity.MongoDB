@@ -57,6 +57,7 @@ namespace SampleWebApp
             app.MapControllers();
             app.MapRazorPages();
 
+
 			await using(AsyncServiceScope serviceScope = app.Services.CreateAsyncScope())
 			{
 				await serviceScope.ServiceProvider.InitializeMongoDbIdentityStores();

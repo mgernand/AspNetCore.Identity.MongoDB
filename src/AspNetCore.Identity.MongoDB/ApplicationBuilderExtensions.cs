@@ -46,7 +46,7 @@
 				ConventionRegistry.Register("IdentityConventionPack", pack, _ => true);
 			}
 
-			await serviceProvider.InitializeMongoDbStores();
+			await serviceProvider.InitializeMongoDB();
 		}
 	}
 }

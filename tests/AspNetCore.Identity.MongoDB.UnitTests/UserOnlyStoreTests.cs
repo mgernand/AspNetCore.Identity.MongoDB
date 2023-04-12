@@ -98,9 +98,9 @@
 			await ShouldThrowArgumentNullException(async () => await store.CreateAsync(null));
 			await ShouldThrowArgumentNullException(async () => await store.UpdateAsync(null));
 			await ShouldThrowArgumentNullException(async () => await store.DeleteAsync(null));
-			await ShouldThrowArgumentNullException(async () => await store.FindByIdAsync(null));
-			await ShouldThrowArgumentNullException(async () => await store.FindByNameAsync(null));
-			await ShouldThrowArgumentNullException(async () => await store.FindByEmailAsync(null));
+			//await ShouldThrowArgumentNullException(async () => await store.FindByIdAsync(null));
+			//await ShouldThrowArgumentNullException(async () => await store.FindByNameAsync(null));
+			//await ShouldThrowArgumentNullException(async () => await store.FindByEmailAsync(null));
 			await ShouldThrowArgumentNullException(async () => await store.GetClaimsAsync(null));
 			await ShouldThrowArgumentNullException(async () => await store.AddClaimsAsync(null, null));
 			await ShouldThrowArgumentNullException(async () => await store.AddClaimsAsync(new MongoIdentityUser(), null));

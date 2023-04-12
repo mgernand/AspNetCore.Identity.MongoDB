@@ -7,7 +7,6 @@
 	using global::MongoDB.Driver;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
 	using MadEyeMatt.MongoDB.DbContext;
-	using MadEyeMatt.MongoDB.DbContext.Initialization;
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.Extensions.DependencyInjection;
 	using NUnit.Framework;
@@ -51,7 +50,10 @@
 
             this.serviceProvider = services.BuildServiceProvider();
 
-			await this.serviceProvider.InitializeMongoDbStores();
+			await using (AsyncServiceScope serviceScope = this.serviceProvider.CreateAsyncScope())
+			{
+				await serviceScope.ServiceProvider.InitializeMongoDbIdentityStores();
+			}
 		}
 
 		private static MongoIdentityRole CreateRole(string roleName)
