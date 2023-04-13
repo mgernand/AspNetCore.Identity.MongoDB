@@ -4,6 +4,7 @@
 	using System.Threading.Tasks;
 	using global::MongoDB.Bson.Serialization.Conventions;
 	using JetBrains.Annotations;
+	using MadEyeMatt.AspNetCore.Identity.MongoDB.Serialization.Conventions;
 	using MadEyeMatt.MongoDB.DbContext.Initialization;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Identity;
