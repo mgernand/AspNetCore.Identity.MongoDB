@@ -6,7 +6,6 @@
 	using System.Security.Claims;
 	using System.Threading.Tasks;
 	using FluentAssertions;
-	using global::MongoDB.Driver;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
 	using MadEyeMatt.MongoDB.DbContext;
 	using Microsoft.AspNetCore.Identity;
@@ -16,30 +15,41 @@
 	[TestFixture]
 	public class RoleStoreTests
 	{
-		private IServiceProvider serviceProvider;
-		private MongoDbContext context;
-
-        [SetUp]
+		[SetUp]
 		public async Task SetUp()
 		{
-			IMongoClient client = this.serviceProvider.GetRequiredService<IMongoClient>();
-			await client.DropDatabaseAsync(GlobalFixture.Database);
-
 			this.context = this.serviceProvider.GetRequiredService<MongoDbContext>();
+			await this.context.Client.DropDatabaseAsync(GlobalFixture.Database);
 		}
+
+		private IServiceProvider serviceProvider;
+		private MongoDbContext context;
 
 		[OneTimeSetUp]
 		public async Task OneTimeSetUp()
 		{
 			IServiceCollection services = new ServiceCollection();
+
 			services.AddMongoDbContext<MongoDbContext>(options =>
-			{
-				options.UseDatabase(GlobalFixture.ConnectionString, GlobalFixture.Database);
-			});
+				{
+					options.UseDatabase(GlobalFixture.ConnectionString, GlobalFixture.Database);
+				})
+				.AddIdentityCore<MongoIdentityUser>(options =>
+				{
+					options.Password.RequireDigit = false;
+					options.Password.RequireLowercase = false;
+					options.Password.RequireNonAlphanumeric = false;
+					options.Password.RequireUppercase = false;
+					options.Password.RequiredLength = 6;
+					options.Password.RequiredUniqueChars = 0;
+				})
+				.AddRoles<MongoIdentityRole>()
+				.AddDefaultTokenProviders()
+				.AddMongoDbStores<MongoDbContext>();
 
 			this.serviceProvider = services.BuildServiceProvider();
 
-			await using (AsyncServiceScope serviceScope = this.serviceProvider.CreateAsyncScope())
+			await using(AsyncServiceScope serviceScope = this.serviceProvider.CreateAsyncScope())
 			{
 				await serviceScope.ServiceProvider.InitializeMongoDbIdentityStores();
 			}
@@ -70,6 +80,28 @@
 		}
 
 		[Test]
+		public async Task ShouldAddClaim()
+		{
+			RoleStore store = this.GetRoleStore();
+
+			MongoIdentityRole role = CreateRole("Tester");
+			IdentityResult result = await store.CreateAsync(role);
+			result.Should().BeSuccess();
+
+			await store.AddClaimAsync(role, new Claim("new-claim", "new-value"));
+			result = await store.UpdateAsync(role);
+			result.Should().BeSuccess();
+
+			IList<Claim> claims = await store.GetClaimsAsync(role);
+			claims.Should().NotBeNull();
+			claims.Should().HaveCount(2);
+			claims[0].Type.Should().Be("test-claim");
+			claims[0].Value.Should().Be("test-value");
+			claims[1].Type.Should().Be("new-claim");
+			claims[1].Value.Should().Be("new-value");
+		}
+
+		[Test]
 		public async Task ShouldCreate()
 		{
 			RoleStore store = this.GetRoleStore();
@@ -79,26 +111,11 @@
 			result.Should().BeSuccess();
 
 			role.Id.Should().NotBeNullOrWhiteSpace();
-			(await this.context.ExistsRole(role.Id)).Should().BeTrue();
+
+			(await store.ExistsRole(role.Id)).Should().BeTrue();
 		}
 
 		[Test]
-		public async Task ShouldUpdate()
-		{
-			RoleStore store = this.GetRoleStore();
-
-			MongoIdentityRole role = CreateRole("Tester");
-			IdentityResult result = await store.CreateAsync(role);
-			result.Should().BeSuccess();
-			role.Name = "Changed";
-			result = await store.UpdateAsync(role);
-			result.Should().BeSuccess();
-
-			MongoIdentityRole expected = await this.context.GetRole(role.Id);
-			expected.Name.Should().Be("Changed");
-		}
-
-        [Test]
 		public async Task ShouldDelete()
 		{
 			RoleStore store = this.GetRoleStore();
@@ -106,11 +123,11 @@
 			MongoIdentityRole role = CreateRole("Tester");
 			IdentityResult result = await store.CreateAsync(role);
 			result.Should().BeSuccess();
-			(await this.context.ExistsRole(role.Id)).Should().BeTrue();
+			(await store.ExistsRole(role.Id)).Should().BeTrue();
 			result = await store.DeleteAsync(role);
 			result.Should().BeSuccess();
 
-			(await this.context.ExistsRole(role.Id)).Should().BeFalse();
+			(await store.ExistsRole(role.Id)).Should().BeFalse();
 		}
 
 		[Test]
@@ -156,28 +173,6 @@
 		}
 
 		[Test]
-		public async Task ShouldAddClaim()
-		{
-			RoleStore store = this.GetRoleStore();
-
-			MongoIdentityRole role = CreateRole("Tester");
-			IdentityResult result = await store.CreateAsync(role);
-			result.Should().BeSuccess();
-
-			await store.AddClaimAsync(role, new Claim("new-claim", "new-value"));
-			result = await store.UpdateAsync(role);
-			result.Should().BeSuccess();
-
-			IList<Claim> claims = await store.GetClaimsAsync(role);
-			claims.Should().NotBeNull();
-			claims.Should().HaveCount(2);
-			claims[0].Type.Should().Be("test-claim");
-			claims[0].Value.Should().Be("test-value");
-			claims[1].Type.Should().Be("new-claim");
-			claims[1].Value.Should().Be("new-value");
-		}
-
-        [Test]
 		public async Task ShouldRemoveClaim()
 		{
 			RoleStore store = this.GetRoleStore();
@@ -192,6 +187,22 @@
 			IList<Claim> claims = await store.GetClaimsAsync(role);
 			claims.Should().NotBeNull();
 			claims.Should().HaveCount(0);
+		}
+
+		[Test]
+		public async Task ShouldUpdate()
+		{
+			RoleStore store = this.GetRoleStore();
+
+			MongoIdentityRole role = CreateRole("Tester");
+			IdentityResult result = await store.CreateAsync(role);
+			result.Should().BeSuccess();
+			role.Name = "Changed";
+			result = await store.UpdateAsync(role);
+			result.Should().BeSuccess();
+
+			MongoIdentityRole expected = await store.GetRole(role.Id);
+			expected.Name.Should().Be("Changed");
 		}
 	}
 }
