@@ -36,7 +36,7 @@
                 Type memberType = Nullable.GetUnderlyingType(originalMemberType) ?? originalMemberType;
                 if (memberType == typeof(string))
                 {
-                    memberMap.SetSerializer(new DataProtectionSerializer(serviceProvider.GetRequiredService<IPersonalDataProtector>()));
+                    memberMap.SetSerializer(new DataProtectionSerializer(this.serviceProvider.GetRequiredService<IPersonalDataProtector>()));
                 }
                 else
                 {

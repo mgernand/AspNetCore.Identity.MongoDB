@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SampleWebApp.Pages
 {
@@ -11,7 +10,7 @@ namespace SampleWebApp.Pages
 
         public IndexModel(ILogger<IndexModel> logger)
         {
-            _logger = logger;
+	        this._logger = logger;
         }
 
         public void OnGet()

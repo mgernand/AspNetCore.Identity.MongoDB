@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -25,9 +24,9 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
             SignInManager<MongoIdentityUser> signInManager,
             ILogger<ChangePasswordModel> logger)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
+	        this._userManager = userManager;
+	        this._signInManager = signInManager;
+	        this._logger = logger;
         }
 
         /// <summary>
@@ -81,49 +80,49 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            var hasPassword = await _userManager.HasPasswordAsync(user);
+            var hasPassword = await this._userManager.HasPasswordAsync(user);
             if (!hasPassword)
             {
-                return RedirectToPage("./SetPassword");
+                return this.RedirectToPage("./SetPassword");
             }
 
-            return Page();
+            return this.Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return Page();
+                return this.Page();
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
+            var changePasswordResult = await this._userManager.ChangePasswordAsync(user, this.Input.OldPassword, this.Input.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
                 foreach (var error in changePasswordResult.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+	                this.ModelState.AddModelError(string.Empty, error.Description);
                 }
-                return Page();
+                return this.Page();
             }
 
-            await _signInManager.RefreshSignInAsync(user);
-            _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            await this._signInManager.RefreshSignInAsync(user);
+            this._logger.LogInformation("User changed their password successfully.");
+            this.StatusMessage = "Your password has been changed.";
 
-            return RedirectToPage();
+            return this.RedirectToPage();
         }
     }
 }

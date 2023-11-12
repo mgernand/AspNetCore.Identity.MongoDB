@@ -22,8 +22,8 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
             UserManager<MongoIdentityUser> userManager,
             ILogger<Disable2faModel> logger)
         {
-            _userManager = userManager;
-            _logger = logger;
+	        this._userManager = userManager;
+	        this._logger = logger;
         }
 
         /// <summary>
@@ -35,37 +35,37 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGet()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            if (!await _userManager.GetTwoFactorEnabledAsync(user))
+            if (!await this._userManager.GetTwoFactorEnabledAsync(user))
             {
                 throw new InvalidOperationException($"Cannot disable 2FA for user as it's not currently enabled.");
             }
 
-            return Page();
+            return this.Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            var disable2faResult = await this._userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
             {
                 throw new InvalidOperationException($"Unexpected error occurred disabling 2FA.");
             }
 
-            _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
-            StatusMessage = "2fa has been disabled. You can reenable 2fa when you setup an authenticator app";
-            return RedirectToPage("./TwoFactorAuthentication");
+            this._logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", this._userManager.GetUserId(this.User));
+            this.StatusMessage = "2fa has been disabled. You can reenable 2fa when you setup an authenticator app";
+            return this.RedirectToPage("./TwoFactorAuthentication");
         }
     }
 }
