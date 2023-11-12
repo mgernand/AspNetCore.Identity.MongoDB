@@ -2,10 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 {
@@ -35,12 +33,12 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public IActionResult OnGet()
         {
-            if (RecoveryCodes == null || RecoveryCodes.Length == 0)
+            if (this.RecoveryCodes == null || this.RecoveryCodes.Length == 0)
             {
-                return RedirectToPage("./TwoFactorAuthentication");
+                return this.RedirectToPage("./TwoFactorAuthentication");
             }
 
-            return Page();
+            return this.Page();
         }
     }
 }

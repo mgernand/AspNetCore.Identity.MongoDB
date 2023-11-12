@@ -14,9 +14,9 @@
 		<RootNamespace>MadEyeMatt.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<IncludeSymbols>false</IncludeSymbols>
 		<Copyright>Copyright © 2023 Matthias Gernand. All rights reserved.</Copyright>
-		<Version>7.2.4</Version>
-		<AssemblyVersion>7.2.4</AssemblyVersion>
-		<FileVersion>7.2.4</FileVersion>
+		<Version>7.2.5</Version>
+		<AssemblyVersion>7.2.5</AssemblyVersion>
+		<FileVersion>7.2.5</FileVersion>
 		<Authors>Matthias Gernand</Authors>
 		<Description>A libary that provides MongoDB UserStore and RoleStore implementations for ASP.NET Identity Core.</Description>
 		<NeutralLanguage>en</NeutralLanguage>
@@ -50,9 +50,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
-		<PackageReference Include="MadEyeMatt.MongoDB.DbContext" Version="7.2.1" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.9" />
+		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
+		<PackageReference Include="MadEyeMatt.MongoDB.DbContext" Version="7.2.2" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.13" />
 	</ItemGroup>
 
 	<ItemGroup>

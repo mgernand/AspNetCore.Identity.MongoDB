@@ -17,7 +17,7 @@
 		/// <inheritdoc />
 		public override string GetCollectionName<TDocument>()
 		{
-			string collectionName = null;
+			string? collectionName = null;
 
 			if (IsGenericBaseType(typeof(TDocument), typeof(IdentityUser<>)))
 			{
@@ -41,10 +41,10 @@
 				return true;
 			}
 
-			Type type = currentType;
+			Type? type = currentType;
 			while (type != null)
 			{
-				Type genericType = type.IsGenericType ? type.GetGenericTypeDefinition() : null;
+				Type? genericType = type.IsGenericType ? type.GetGenericTypeDefinition() : null;
 				if (genericType != null && genericType == genericBaseType)
 				{
 					return true;

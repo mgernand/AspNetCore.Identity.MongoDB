@@ -16,7 +16,7 @@
         /// <inheritdoc />
         public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, string value)
         {
-            string protectedString = protector.Protect(value);
+            string protectedString = this.protector.Protect(value);
             base.Serialize(context, args, protectedString);
         }
 
@@ -24,7 +24,7 @@
         public override string Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
             string protectedString = base.Deserialize(context, args);
-            return protector.Unprotect(protectedString);
+            return this.protector.Unprotect(protectedString);
         }
     }
 }

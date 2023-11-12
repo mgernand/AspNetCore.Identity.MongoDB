@@ -1,6 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-using System;
+
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,19 +20,19 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
             UserManager<MongoIdentityUser> userManager,
             ILogger<PersonalDataModel> logger)
         {
-            _userManager = userManager;
-            _logger = logger;
+	        this._userManager = userManager;
+	        this._logger = logger;
         }
 
         public async Task<IActionResult> OnGet()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            return Page();
+            return this.Page();
         }
     }
 }

@@ -2,11 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -22,7 +20,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
 
         public ResetPasswordModel(UserManager<MongoIdentityUser> userManager)
         {
-            _userManager = userManager;
+	        this._userManager = userManager;
         }
 
         /// <summary>
@@ -77,43 +75,43 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
         {
             if (code == null)
             {
-                return BadRequest("A code must be supplied for password reset.");
+                return this.BadRequest("A code must be supplied for password reset.");
             }
             else
             {
-                Input = new InputModel
+	            this.Input = new InputModel
                 {
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
                 };
-                return Page();
+                return this.Page();
             }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return Page();
+                return this.Page();
             }
 
-            var user = await _userManager.FindByEmailAsync(Input.Email);
+            var user = await this._userManager.FindByEmailAsync(this.Input.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
-                return RedirectToPage("./ResetPasswordConfirmation");
+                return this.RedirectToPage("./ResetPasswordConfirmation");
             }
 
-            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
+            var result = await this._userManager.ResetPasswordAsync(user, this.Input.Code, this.Input.Password);
             if (result.Succeeded)
             {
-                return RedirectToPage("./ResetPasswordConfirmation");
+                return this.RedirectToPage("./ResetPasswordConfirmation");
             }
 
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+	            this.ModelState.AddModelError(string.Empty, error.Description);
             }
-            return Page();
+            return this.Page();
         }
     }
 }
