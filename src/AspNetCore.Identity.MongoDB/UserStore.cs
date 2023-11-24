@@ -126,9 +126,9 @@
 		public override IQueryable<TUser> Users => this.UsersCollection.AsQueryable();
 
 		/// <summary>
-		///     Returns an <see cref="T:System.Linq.IQueryable`1" /> collection of roles.
+		///     Returns an <see cref="IQueryable{T}" /> collection of roles.
 		/// </summary>
-		/// <value>An <see cref="T:System.Linq.IQueryable`1" /> collection of roles.</value>
+		/// <value>An <see cref="IQueryable{T}" /> collection of roles.</value>
 		public virtual IQueryable<TRole> Roles => this.RolesCollection.AsQueryable();
 
 		/// <summary>
@@ -146,7 +146,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
+			Guard.ThrowIfNull(user);
 
 			user.ConcurrencyStamp = Guid.NewGuid().ToString("N");
 			await this.UsersCollection.InsertOneAsync(user, new InsertOneOptions(), cancellationToken);
@@ -159,7 +159,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
+			Guard.ThrowIfNull(user);
 
 			string oldConcurrencyStamp = user.ConcurrencyStamp;
 			user.ConcurrencyStamp = Guid.NewGuid().ToString("N");
@@ -177,7 +177,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
+			Guard.ThrowIfNull(user);
 
 			string oldConcurrencyStamp = user.ConcurrencyStamp;
 			user.ConcurrencyStamp = Guid.NewGuid().ToString("N");
@@ -223,7 +223,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
+			Guard.ThrowIfNull(user);
 
 			IList<Claim> claims = user.Claims.Select(x => x.ToClaim()).ToList();
 			return Task.FromResult(claims);
@@ -234,8 +234,8 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-			ArgumentNullException.ThrowIfNull(claims);
+			Guard.ThrowIfNull(user);
+			Guard.ThrowIfNull(claims);
 
 			foreach(Claim claim in claims)
 			{
@@ -250,9 +250,9 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-			ArgumentNullException.ThrowIfNull(claim);
-			ArgumentNullException.ThrowIfNull(newClaim);
+			Guard.ThrowIfNull(user);
+			Guard.ThrowIfNull(claim);
+			Guard.ThrowIfNull(newClaim);
 
 			user.ReplaceClaim(claim, newClaim);
 
@@ -264,8 +264,8 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-			ArgumentNullException.ThrowIfNull(claims);
+			Guard.ThrowIfNull(user);
+			Guard.ThrowIfNull(claims);
 
 			foreach(Claim claim in claims)
 			{
@@ -280,8 +280,8 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
-			ArgumentNullException.ThrowIfNull(login);
+			Guard.ThrowIfNull(user);
+			Guard.ThrowIfNull(login);
 
 			user.AddLogin(login);
 
@@ -293,7 +293,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
+			Guard.ThrowIfNull(user);
 
 			MongoUserLogin mongoUserLogin = user.Logins.FirstOrDefault(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey);
 			if(mongoUserLogin is not null)
@@ -309,7 +309,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
+			Guard.ThrowIfNull(user);
 
 			IList<UserLoginInfo> logins = user.Logins.Select(x => x.ToUserLoginInfo()).ToList();
 			return Task.FromResult(logins);
@@ -320,7 +320,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(claim);
+			Guard.ThrowIfNull(claim);
 
 			FilterDefinition<TUser> filterDefinition = Builders<TUser>.Filter.ElemMatch(x => x.Claims, claims => claims.ClaimValue == claim.Value && claims.ClaimType == claim.Type);
 			return await this.UsersCollection.Find(filterDefinition).ToListAsync(cancellationToken);
@@ -331,8 +331,8 @@
         {
             cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
-            ArgumentNullException.ThrowIfNull(user);
-            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+            Guard.ThrowIfNull(user);
+            Guard.ThrowIfNullOrWhiteSpace(normalizedRoleName);
 
             TRole role = await this.RolesCollection.Find(x => x.NormalizedName == normalizedRoleName).FirstOrDefaultAsync(cancellationToken);
             return role is not null && user.Roles.Any(x => x.Equals(role.Id));
@@ -343,9 +343,9 @@
         {
             cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
-            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+			Guard.ThrowIfNullOrWhiteSpace(normalizedRoleName);
 
-            TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
+			TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
             if (role is not null)
             {
                 return await this.UsersCollection.Find(x => x.Roles.Contains(role.Id)).ToListAsync(cancellationToken);
@@ -359,8 +359,8 @@
         {
             cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
-            ArgumentNullException.ThrowIfNull(user);
-            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+            Guard.ThrowIfNull(user);
+            Guard.ThrowIfNullOrWhiteSpace(normalizedRoleName);
 
             TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
             if (role is null)
@@ -376,8 +376,8 @@
         {
             cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
-            ArgumentNullException.ThrowIfNull(user);
-            ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+            Guard.ThrowIfNull(user);
+            Guard.ThrowIfNullOrWhiteSpace(normalizedRoleName);
 
             TRole role = await this.FindRoleAsync(normalizedRoleName, cancellationToken);
             if (role is null)
@@ -393,7 +393,7 @@
         {
             cancellationToken.ThrowIfCancellationRequested();
             this.ThrowIfDisposed();
-            ArgumentNullException.ThrowIfNull(user);
+            Guard.ThrowIfNull(user);
 
             if (user.Roles.Any())
             {
@@ -411,7 +411,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(user);
+			Guard.ThrowIfNull(user);
 
 			// HACK
 			MongoIdentityUserToken<TKey> token = user.GetToken(loginProvider, name);
@@ -447,7 +447,7 @@
         protected override Task AddUserTokenAsync(MongoIdentityUserToken<TKey> token)
 		{
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(token);
+			Guard.ThrowIfNull(token);
 
 			//TUser user = await this.UsersCollection.Find(x => x.Id.Equals(token.UserId)).FirstOrDefaultAsync();
 			token.User.AddToken(token);
@@ -459,7 +459,7 @@
 		protected override Task RemoveUserTokenAsync(MongoIdentityUserToken<TKey> token)
 		{
 			this.ThrowIfDisposed();
-			ArgumentNullException.ThrowIfNull(token);
+			Guard.ThrowIfNull(token);
 
 			//TUser user = await this.UsersCollection.Find(x => x.Id.Equals(token.UserId)).FirstOrDefaultAsync();
 			token.User.RemoveToken(token);
@@ -481,7 +481,7 @@
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			this.ThrowIfDisposed();
-			ArgumentException.ThrowIfNullOrEmpty(normalizedRoleName);
+			Guard.ThrowIfNullOrWhiteSpace(normalizedRoleName);
 
 			return await this.RolesCollection.Find(x => x.NormalizedName == normalizedRoleName).FirstOrDefaultAsync(cancellationToken);
 		}
