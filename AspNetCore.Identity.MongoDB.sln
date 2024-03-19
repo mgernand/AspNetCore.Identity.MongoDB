@@ -11,6 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".items", ".items", "{241433
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EDEC7D8F-4C6F-4DE3-8022-17A2A23AB18B}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{24F9EFE8-010B-48D9-B5D2-EF194BDEAC31}"
 EndProject
@@ -22,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWebApp", "samples\Sam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.MongoDB.UnitTests", "tests\AspNetCore.Identity.MongoDB.UnitTests\AspNetCore.Identity.MongoDB.UnitTests.csproj", "{BF2F25DB-6F0D-4E6F-BF91-45474071C754}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Identity.MongoDB.IntegrationTests", "tests\AspNetCore.Identity.MongoDB.IntegrationTests\AspNetCore.Identity.MongoDB.IntegrationTests.csproj", "{42B37F56-402B-48AC-9845-3DBE159E15B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.MongoDB.IntegrationTests", "tests\AspNetCore.Identity.MongoDB.IntegrationTests\AspNetCore.Identity.MongoDB.IntegrationTests.csproj", "{42B37F56-402B-48AC-9845-3DBE159E15B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
