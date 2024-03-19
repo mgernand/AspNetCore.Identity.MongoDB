@@ -2,32 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-		<LangVersion>latest</LangVersion>
-		<Nullable>disable</Nullable>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<PackageId>MadEyeMatt.$(AssemblyName)</PackageId>
-		<AssemblyName>MadEyeMatt.$(MSBuildProjectName)</AssemblyName>
-		<RootNamespace>MadEyeMatt.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-		<IncludeSymbols>false</IncludeSymbols>
-		<Copyright>Copyright © 2023-2024 Matthias Gernand. All rights reserved.</Copyright>
-		<Version>8.0.2</Version>
-		<AssemblyVersion>8.0.2</AssemblyVersion>
-		<FileVersion>8.0.2</FileVersion>
-		<Authors>Matthias Gernand</Authors>
-		<Description>A libary that provides MongoDB UserStore and RoleStore implementations for ASP.NET Identity Core.</Description>
-		<NeutralLanguage>en</NeutralLanguage>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<PackageProjectUrl>https://github.com/mgernand/AspNetCore.Identity.MongoDB</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/mgernand/AspNetCore.Identity.MongoDB</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PackageTags>aspnetcore;mongodb;identity;membership</PackageTags>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -51,8 +25,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-		<PackageReference Include="MadEyeMatt.MongoDB.DbContext" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.0" />
+		<PackageReference Include="MadEyeMatt.MongoDB.DbContext" Version="8.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
