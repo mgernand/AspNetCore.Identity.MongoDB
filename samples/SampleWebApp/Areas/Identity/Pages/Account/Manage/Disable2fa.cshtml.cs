@@ -35,7 +35,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGet()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -51,13 +51,13 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            var disable2faResult = await this._userManager.SetTwoFactorEnabledAsync(user, false);
+            IdentityResult disable2faResult = await this._userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
             {
                 throw new InvalidOperationException($"Unexpected error occurred disabling 2FA.");

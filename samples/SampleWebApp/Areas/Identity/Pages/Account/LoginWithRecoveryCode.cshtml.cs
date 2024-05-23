@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace SampleWebApp.Areas.Identity.Pages.Account
 {
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 	public class LoginWithRecoveryCodeModel : PageModel
     {
@@ -62,7 +63,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await this._signInManager.GetTwoFactorAuthenticationUserAsync();
+            MongoIdentityUser user = await this._signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
@@ -80,17 +81,17 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
                 return this.Page();
             }
 
-            var user = await this._signInManager.GetTwoFactorAuthenticationUserAsync();
+            MongoIdentityUser user = await this._signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             }
 
-            var recoveryCode = this.Input.RecoveryCode.Replace(" ", string.Empty);
+            string recoveryCode = this.Input.RecoveryCode.Replace(" ", string.Empty);
 
-            var result = await this._signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+            SignInResult result = await this._signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
 
-            var userId = await this._userManager.GetUserIdAsync(user);
+            string userId = await this._userManager.GetUserIdAsync(user);
 
             if (result.Succeeded)
             {

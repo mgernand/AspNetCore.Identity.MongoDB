@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 {
+	using System.Collections.Generic;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
 
 	public class EnableAuthenticatorModel : PageModel
@@ -88,7 +89,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -101,7 +102,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -114,9 +115,9 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
             }
 
             // Strip spaces and hyphens
-            var verificationCode = this.Input.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+            string verificationCode = this.Input.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var is2faTokenValid = await this._userManager.VerifyTwoFactorTokenAsync(
+            bool is2faTokenValid = await this._userManager.VerifyTwoFactorTokenAsync(
                 user, this._userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
 
             if (!is2faTokenValid)
@@ -127,14 +128,14 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
             }
 
             await this._userManager.SetTwoFactorEnabledAsync(user, true);
-            var userId = await this._userManager.GetUserIdAsync(user);
+            string userId = await this._userManager.GetUserIdAsync(user);
             this._logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
             this.StatusMessage = "Your authenticator app has been verified.";
 
             if (await this._userManager.CountRecoveryCodesAsync(user) == 0)
             {
-                var recoveryCodes = await this._userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+                IEnumerable<string> recoveryCodes = await this._userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
                 this.RecoveryCodes = recoveryCodes.ToArray();
                 return this.RedirectToPage("./ShowRecoveryCodes");
             }
@@ -147,7 +148,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
         private async Task LoadSharedKeyAndQrCodeUriAsync(MongoIdentityUser user)
         {
             // Load the authenticator key & QR code URI to display on the form
-            var unformattedKey = await this._userManager.GetAuthenticatorKeyAsync(user);
+            string unformattedKey = await this._userManager.GetAuthenticatorKeyAsync(user);
             if (string.IsNullOrEmpty(unformattedKey))
             {
                 await this._userManager.ResetAuthenticatorKeyAsync(user);
@@ -156,13 +157,13 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
             this.SharedKey = this.FormatKey(unformattedKey);
 
-            var email = await this._userManager.GetEmailAsync(user);
+            string email = await this._userManager.GetEmailAsync(user);
             this.AuthenticatorUri = this.GenerateQrCodeUri(email, unformattedKey);
         }
 
         private string FormatKey(string unformattedKey)
         {
-            var result = new StringBuilder();
+            StringBuilder result = new StringBuilder();
             int currentPosition = 0;
             while (currentPosition + 4 < unformattedKey.Length)
             {

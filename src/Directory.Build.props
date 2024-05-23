@@ -29,7 +29,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<VersionPrefix>8.0.4</VersionPrefix>
+		<VersionPrefix>8.0.5</VersionPrefix>
 		<VersionSuffix></VersionSuffix>
 		<FileVersion>$(VersionPrefix)</FileVersion>
 		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>

@@ -62,7 +62,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -78,7 +78,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");

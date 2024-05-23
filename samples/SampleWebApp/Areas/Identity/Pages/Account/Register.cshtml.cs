@@ -113,20 +113,20 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
             this.ExternalLogins = (await this._signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
-                var user = this.CreateUser();
+                MongoIdentityUser user = this.CreateUser();
 
                 await this._userStore.SetUserNameAsync(user, this.Input.Email, CancellationToken.None);
                 await this._emailStore.SetEmailAsync(user, this.Input.Email, CancellationToken.None);
-                var result = await this._userManager.CreateAsync(user, this.Input.Password);
+                IdentityResult result = await this._userManager.CreateAsync(user, this.Input.Password);
 
                 if (result.Succeeded)
                 {
 	                this._logger.LogInformation("User created a new account with password.");
 
-                    var userId = await this._userManager.GetUserIdAsync(user);
-                    var code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string userId = await this._userManager.GetUserIdAsync(user);
+                    string code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = this.Url.Page(
+                    string callbackUrl = this.Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
@@ -145,7 +145,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
                         return this.LocalRedirect(returnUrl);
                     }
                 }
-                foreach (var error in result.Errors)
+                foreach (IdentityError error in result.Errors)
                 {
 	                this.ModelState.AddModelError(string.Empty, error.Description);
                 }
