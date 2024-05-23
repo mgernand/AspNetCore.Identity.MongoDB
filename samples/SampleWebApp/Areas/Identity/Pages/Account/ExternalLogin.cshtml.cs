@@ -20,6 +20,8 @@ using Microsoft.Extensions.Logging;
 namespace SampleWebApp.Areas.Identity.Pages.Account
 {
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
+	using Microsoft.AspNetCore.Authentication;
+	using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 	[AllowAnonymous]
     public class ExternalLoginModel : PageModel
@@ -92,8 +94,8 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
-            var redirectUrl = this.Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
-            var properties = this._signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            string redirectUrl = this.Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+            AuthenticationProperties properties = this._signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
 
@@ -105,7 +107,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
 	            this.ErrorMessage = $"Error from external provider: {remoteError}";
                 return this.RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-            var info = await this._signInManager.GetExternalLoginInfoAsync();
+            ExternalLoginInfo info = await this._signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
 	            this.ErrorMessage = "Error loading external login information.";
@@ -113,7 +115,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await this._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            SignInResult result = await this._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
 	            this._logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -143,7 +145,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? this.Url.Content("~/");
             // Get the information about the user from the external login provider
-            var info = await this._signInManager.GetExternalLoginInfoAsync();
+            ExternalLoginInfo info = await this._signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
 	            this.ErrorMessage = "Error loading external login information during confirmation.";
@@ -152,12 +154,12 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
 
             if (this.ModelState.IsValid)
             {
-                var user = this.CreateUser();
+                MongoIdentityUser user = this.CreateUser();
 
                 await this._userStore.SetUserNameAsync(user, this.Input.Email, CancellationToken.None);
                 await this._emailStore.SetEmailAsync(user, this.Input.Email, CancellationToken.None);
 
-                var result = await this._userManager.CreateAsync(user);
+                IdentityResult result = await this._userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     result = await this._userManager.AddLoginAsync(user, info);
@@ -165,10 +167,10 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
                     {
 	                    this._logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
-                        var userId = await this._userManager.GetUserIdAsync(user);
-                        var code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
+                        string userId = await this._userManager.GetUserIdAsync(user);
+                        string code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = this.Url.Page(
+                        string callbackUrl = this.Url.Page(
                             "/Account/ConfirmEmail",
                             pageHandler: null,
                             values: new { area = "Identity", userId = userId, code = code },
@@ -187,7 +189,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
                         return this.LocalRedirect(returnUrl);
                     }
                 }
-                foreach (var error in result.Errors)
+                foreach (IdentityError error in result.Errors)
                 {
 	                this.ModelState.AddModelError(string.Empty, error.Description);
                 }

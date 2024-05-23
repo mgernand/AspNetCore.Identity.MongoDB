@@ -62,17 +62,17 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
                 return this.Page();
             }
 
-            var user = await this._userManager.FindByEmailAsync(this.Input.Email);
+            MongoIdentityUser user = await this._userManager.FindByEmailAsync(this.Input.Email);
             if (user == null)
             {
 	            this.ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
                 return this.Page();
             }
 
-            var userId = await this._userManager.GetUserIdAsync(user);
-            var code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
+            string userId = await this._userManager.GetUserIdAsync(user);
+            string code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = this.Url.Page(
+            string callbackUrl = this.Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
                 values: new { userId = userId, code = code },

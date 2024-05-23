@@ -38,14 +38,14 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
                 return this.RedirectToPage("/Index");
             }
 
-            var user = await this._userManager.FindByIdAsync(userId);
+            MongoIdentityUser user = await this._userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{userId}'.");
             }
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            var result = await this._userManager.ChangeEmailAsync(user, email, code);
+            IdentityResult result = await this._userManager.ChangeEmailAsync(user, email, code);
             if (!result.Succeeded)
             {
 	            this.StatusMessage = "Error changing email.";
@@ -54,7 +54,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
 
             // In our UI email and user name are one and the same, so when we update the email
             // we need to update the user name.
-            var setUserNameResult = await this._userManager.SetUserNameAsync(user, email);
+            IdentityResult setUserNameResult = await this._userManager.SetUserNameAsync(user, email);
             if (!setUserNameResult.Succeeded)
             {
 	            this.StatusMessage = "Error changing user name.";

@@ -76,7 +76,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(MongoIdentityUser user)
         {
-            var email = await this._userManager.GetEmailAsync(user);
+            string email = await this._userManager.GetEmailAsync(user);
             this.Email = email;
 
             this.Input = new InputModel
@@ -89,7 +89,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -101,7 +101,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostChangeEmailAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -113,13 +113,13 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
                 return this.Page();
             }
 
-            var email = await this._userManager.GetEmailAsync(user);
+            string email = await this._userManager.GetEmailAsync(user);
             if (this.Input.NewEmail != email)
             {
-                var userId = await this._userManager.GetUserIdAsync(user);
-                var code = await this._userManager.GenerateChangeEmailTokenAsync(user, this.Input.NewEmail);
+                string userId = await this._userManager.GetUserIdAsync(user);
+                string code = await this._userManager.GenerateChangeEmailTokenAsync(user, this.Input.NewEmail);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = this.Url.Page(
+                string callbackUrl = this.Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, email = this.Input.NewEmail, code = code },
@@ -138,7 +138,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -150,11 +150,11 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
                 return this.Page();
             }
 
-            var userId = await this._userManager.GetUserIdAsync(user);
-            var email = await this._userManager.GetEmailAsync(user);
-            var code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
+            string userId = await this._userManager.GetUserIdAsync(user);
+            string email = await this._userManager.GetEmailAsync(user);
+            string code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = this.Url.Page(
+            string callbackUrl = this.Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
                 values: new { area = "Identity", userId = userId, code = code },

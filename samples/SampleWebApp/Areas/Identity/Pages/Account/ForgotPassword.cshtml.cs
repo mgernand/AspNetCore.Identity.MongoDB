@@ -53,7 +53,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
         {
             if (this.ModelState.IsValid)
             {
-                var user = await this._userManager.FindByEmailAsync(this.Input.Email);
+                MongoIdentityUser user = await this._userManager.FindByEmailAsync(this.Input.Email);
                 if (user == null || !(await this._userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -62,9 +62,9 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
 
                 // For more information on how to enable account confirmation and password reset please
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await this._userManager.GeneratePasswordResetTokenAsync(user);
+                string code = await this._userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = this.Url.Page(
+                string callbackUrl = this.Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
                     values: new { area = "Identity", code },

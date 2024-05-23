@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 {
+	using System.Reflection;
 	using MadEyeMatt.AspNetCore.Identity.MongoDB;
 
 	public class DownloadPersonalDataModel : PageModel
@@ -36,7 +37,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -45,16 +46,16 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
             this._logger.LogInformation("User with ID '{UserId}' asked for their personal data.", this._userManager.GetUserId(this.User));
 
             // Only include personal data for download
-            var personalData = new Dictionary<string, string>();
-            var personalDataProps = typeof(IdentityUser).GetProperties().Where(
+            Dictionary<string, string> personalData = new Dictionary<string, string>();
+            IEnumerable<PropertyInfo> personalDataProps = typeof(IdentityUser).GetProperties().Where(
                             prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
-            foreach (var p in personalDataProps)
+            foreach (PropertyInfo p in personalDataProps)
             {
                 personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
             }
 
-            var logins = await this._userManager.GetLoginsAsync(user);
-            foreach (var l in logins)
+            IList<UserLoginInfo> logins = await this._userManager.GetLoginsAsync(user);
+            foreach (UserLoginInfo l in logins)
             {
                 personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
             }

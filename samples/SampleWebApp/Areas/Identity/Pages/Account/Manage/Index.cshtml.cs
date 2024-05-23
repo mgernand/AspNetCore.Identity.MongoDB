@@ -62,8 +62,8 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(MongoIdentityUser user)
         {
-            var userName = await this._userManager.GetUserNameAsync(user);
-            var phoneNumber = await this._userManager.GetPhoneNumberAsync(user);
+            string userName = await this._userManager.GetUserNameAsync(user);
+            string phoneNumber = await this._userManager.GetPhoneNumberAsync(user);
 
             this.Username = userName;
 
@@ -75,7 +75,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -87,7 +87,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -99,10 +99,10 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
                 return this.Page();
             }
 
-            var phoneNumber = await this._userManager.GetPhoneNumberAsync(user);
+            string phoneNumber = await this._userManager.GetPhoneNumberAsync(user);
             if (this.Input.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await this._userManager.SetPhoneNumberAsync(user, this.Input.PhoneNumber);
+                IdentityResult setPhoneResult = await this._userManager.SetPhoneNumberAsync(user, this.Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
 	                this.StatusMessage = "Unexpected error when trying to set phone number.";

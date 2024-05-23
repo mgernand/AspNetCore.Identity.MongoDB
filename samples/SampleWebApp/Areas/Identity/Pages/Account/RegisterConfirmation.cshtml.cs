@@ -53,7 +53,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
             }
             returnUrl = returnUrl ?? this.Url.Content("~/");
 
-            var user = await this._userManager.FindByEmailAsync(email);
+            MongoIdentityUser user = await this._userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with email '{email}'.");
@@ -64,8 +64,8 @@ namespace SampleWebApp.Areas.Identity.Pages.Account
             this.DisplayConfirmAccountLink = true;
             if (this.DisplayConfirmAccountLink)
             {
-                var userId = await this._userManager.GetUserIdAsync(user);
-                var code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
+                string userId = await this._userManager.GetUserIdAsync(user);
+                string code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 this.EmailConfirmationUrl = this.Url.Page(
                     "/Account/ConfirmEmail",

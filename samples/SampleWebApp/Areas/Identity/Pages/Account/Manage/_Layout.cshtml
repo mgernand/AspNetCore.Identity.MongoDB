@@ -1,5 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out object? parentLayout) && parentLayout !=  null)
     {
         Layout = parentLayout.ToString();
     }

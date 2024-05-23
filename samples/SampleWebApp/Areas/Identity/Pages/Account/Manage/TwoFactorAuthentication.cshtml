@@ -9,7 +9,7 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <h3>@ViewData["Title"]</h3>
 @{
-    var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
+    ITrackingConsentFeature? consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
     @if (consentFeature?.CanTrack ?? true)
     {
         @if (Model.Is2faEnabled)

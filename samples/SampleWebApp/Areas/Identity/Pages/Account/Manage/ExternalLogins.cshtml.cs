@@ -58,7 +58,7 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
@@ -81,13 +81,13 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostRemoveLoginAsync(string loginProvider, string providerKey)
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            var result = await this._userManager.RemoveLoginAsync(user, loginProvider, providerKey);
+            IdentityResult result = await this._userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             if (!result.Succeeded)
             {
 	            this.StatusMessage = "The external login was not removed.";
@@ -105,27 +105,27 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
             await this.HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             // Request a redirect to the external login provider to link a login for the current user
-            var redirectUrl = this.Url.Page("./ExternalLogins", pageHandler: "LinkLoginCallback");
-            var properties = this._signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, this._userManager.GetUserId(this.User));
+            string redirectUrl = this.Url.Page("./ExternalLogins", pageHandler: "LinkLoginCallback");
+            AuthenticationProperties properties = this._signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, this._userManager.GetUserId(this.User));
             return new ChallengeResult(provider, properties);
         }
 
         public async Task<IActionResult> OnGetLinkLoginCallbackAsync()
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            MongoIdentityUser user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this._userManager.GetUserId(this.User)}'.");
             }
 
-            var userId = await this._userManager.GetUserIdAsync(user);
-            var info = await this._signInManager.GetExternalLoginInfoAsync(userId);
+            string userId = await this._userManager.GetUserIdAsync(user);
+            ExternalLoginInfo info = await this._signInManager.GetExternalLoginInfoAsync(userId);
             if (info == null)
             {
                 throw new InvalidOperationException($"Unexpected error occurred loading external login info.");
             }
 
-            var result = await this._userManager.AddLoginAsync(user, info);
+            IdentityResult result = await this._userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
 	            this.StatusMessage = "The external login was not added. External logins can only be associated with one account.";
