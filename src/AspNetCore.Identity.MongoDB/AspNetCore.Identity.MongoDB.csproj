@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,8 +25,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2024.3.0" PrivateAssets="All" />
-		<PackageReference Include="MadEyeMatt.MongoDB.DbContext" Version="8.1.5" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.10" />
+		<PackageReference Include="MadEyeMatt.MongoDB.DbContext" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
