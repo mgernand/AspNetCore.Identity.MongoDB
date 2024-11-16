@@ -60,9 +60,9 @@ namespace SampleWebApp.Areas.Identity.Pages.Account.Manage
                 personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
             }
 
-            personalData.Add($"Authenticator Key", await this._userManager.GetAuthenticatorKeyAsync(user));
+            personalData.Add("Authenticator Key", await this._userManager.GetAuthenticatorKeyAsync(user));
 
-            this.Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
+			this.Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
             return new FileContentResult(JsonSerializer.SerializeToUtf8Bytes(personalData), "application/json");
         }
     }
