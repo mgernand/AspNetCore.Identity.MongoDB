@@ -3,6 +3,7 @@
 A libary that provides MongoDB UserStore and RoleStore implementations for ASP.NET Identity Core.
 It allows you to use MongoDB with ASP.NET Core Identity.
 
+## This repository was moved to https://codeberg.org/mgernand/AspNetCore.Identity.MongoDB
 
 ## Identity Entities
 
